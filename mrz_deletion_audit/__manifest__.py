@@ -32,6 +32,7 @@ Keeps a permanent, read-only trace of every tracked record deletion:
         'views/res_config_settings_views.xml',
         'views/deletion_audit_menus.xml',
     ],
+    'images': ['static/description/banner.png'],
     'post_init_hook': 'post_init_hook',
     'installable': True,
     'application': True,

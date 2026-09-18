@@ -1,0 +1,630 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mrz_deletion_audit
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-18 10:06+0000\n"
+"PO-Revision-Date: 2026-09-18 10:06+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: mrz_deletion_audit
+#. odoo-python
+#: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+msgid "(and %(count)s more)"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#. odoo-python
+#: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+msgid "(binary data)"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_rule__active
+msgid "Active"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.actions.act_window,help:mrz_deletion_audit.action_mrz_deletion_audit_rule
+msgid ""
+"Add a rule for each model whose deletions must be logged,\n"
+"                or enable \"Track All Business Models\" in the settings and use rules to ignore some models."
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:res.groups,name:mrz_deletion_audit.group_mrz_deletion_audit_manager
+msgid "Administrator"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,help:mrz_deletion_audit.field_mrz_deletion_audit_rule__capture_children
+msgid ""
+"Also snapshot the child records the database deletes automatically together "
+"with this record, e.g. the lines of an order."
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.ui.menu,name:mrz_deletion_audit.menu_mrz_deletion_audit_analysis
+msgid "Analysis"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_rule_view_form
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_rule_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__attachment_info
+msgid "Attachment Data"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__attachment_count
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_form
+msgid "Attachments"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:res.groups,name:mrz_deletion_audit.group_mrz_deletion_audit_user
+msgid "Auditor"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model,name:mrz_deletion_audit.model_base
+msgid "Base"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__user_agent
+msgid "Browser / Client"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_rule__capture_children
+msgid "Capture Cascaded Records"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields.selection,name:mrz_deletion_audit.selection__mrz_deletion_audit_log__origin__cascade
+msgid "Cascade"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__cascade_truncated
+msgid "Cascade Truncated"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__child_count
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_form
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_search
+msgid "Cascaded"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#. odoo-python
+#: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__child_ids
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_form
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.res_config_settings_view_form
+msgid "Cascaded Records"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.actions.act_window,help:mrz_deletion_audit.action_mrz_deletion_audit_rule
+msgid "Choose which models to audit"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__company_id
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_search
+msgid "Company"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model,name:mrz_deletion_audit.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.ui.menu,name:mrz_deletion_audit.menu_mrz_deletion_audit_config
+msgid "Configuration"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__create_uid
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_rule__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__create_date
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_rule__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__snapshot
+msgid "Data"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__attachment_html
+msgid "Deleted Attachments"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__user_id
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_form
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_search
+msgid "Deleted By"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__snapshot_html
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_form
+msgid "Deleted Data"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__snapshot_search
+msgid "Deleted Data Contains"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__deletion_date
+msgid "Deleted On"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__name
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_form
+msgid "Deleted Record"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.actions.act_window,name:mrz_deletion_audit.action_mrz_deletion_audit_log
+#: model:ir.ui.menu,name:mrz_deletion_audit.menu_mrz_deletion_audit_log
+msgid "Deleted Records"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__parent_id
+msgid "Deleted Together With"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_search
+msgid "Deleted by Me"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#. odoo-python
+#: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+msgid "Deleted data can only be searched with 'contains'."
+msgstr ""
+
+#. module: mrz_deletion_audit
+#. odoo-python
+#: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+msgid "Deleted in the Same Transaction"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.actions.act_window,name:mrz_deletion_audit.action_mrz_deletion_audit_log_analysis
+msgid "Deletion Analysis"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.module.category,name:mrz_deletion_audit.module_category_mrz_deletion_audit
+#: model:ir.ui.menu,name:mrz_deletion_audit.menu_mrz_deletion_audit_root
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.res_config_settings_view_form
+msgid "Deletion Audit"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model,name:mrz_deletion_audit.model_mrz_deletion_audit_log
+msgid "Deletion Audit Log"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model,name:mrz_deletion_audit.model_mrz_deletion_audit_rule
+msgid "Deletion Audit Rule"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.actions.server,name:mrz_deletion_audit.ir_cron_mrz_deletion_audit_purge_ir_actions_server
+msgid "Deletion Audit: Purge Old Logs"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_search
+msgid "Deletion Date"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_rule__log_count
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_graph
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_pivot
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_rule_view_form
+msgid "Deletions"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,help:mrz_deletion_audit.field_mrz_deletion_audit_log__transaction_ref
+msgid "Deletions made in the same database transaction share this reference."
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_search
+msgid "Direct Deletions"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__display_name
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_rule__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__model_description
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_search
+msgid "Document Type"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.actions.act_window,help:mrz_deletion_audit.action_mrz_deletion_audit_log
+msgid ""
+"Every time a record of a tracked model is deleted, you will find here\n"
+"                who deleted it, when, from where, and all the data it contained."
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_rule__excluded_field_ids
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_rule_view_form
+msgid "Excluded Fields"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields.selection,name:mrz_deletion_audit.selection__mrz_deletion_audit_log__origin__api
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_search
+msgid "External API"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#. odoo-python
+#: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+msgid "Field"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,help:mrz_deletion_audit.field_mrz_deletion_audit_log__cascade_field
+msgid "Field of this record that pointed to the deleted parent record."
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,help:mrz_deletion_audit.field_mrz_deletion_audit_rule__excluded_field_ids
+msgid "Fields never stored in the snapshot, e.g. sensitive data."
+msgstr ""
+
+#. module: mrz_deletion_audit
+#. odoo-python
+#: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+msgid "File"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__id
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_rule__id
+msgid "ID"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__ip_address
+msgid "IP Address"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields.selection,name:mrz_deletion_audit.selection__mrz_deletion_audit_rule__mode__ignore
+msgid "Ignore"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_rule_view_search
+msgid "Ignored"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_res_config_settings__mrz_deletion_audit_retention_days
+msgid "Keep Deletion Logs For (days)"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.res_config_settings_view_form
+msgid "Keep Logs For"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__write_uid
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_rule__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__write_date
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_rule__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__cascade_field
+msgid "Linked Through"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.res_config_settings_view_form
+msgid ""
+"Log the deletions of every business model, not only the models listed in the"
+" tracking rules. Technical models are skipped."
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__session_user_id
+msgid "Logged-in User"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.res_config_settings_view_form
+msgid ""
+"Logs older than this are purged automatically every day. Set 0 to keep them "
+"forever."
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_res_config_settings__mrz_deletion_audit_max_cascade
+msgid "Max. Cascaded Records per Deletion"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.res_config_settings_view_form
+msgid ""
+"Maximum number of child records captured when one deletion cascades to many "
+"records."
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_rule__mode
+msgid "Mode"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__model_id
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_rule__model_id
+msgid "Model"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_form
+msgid ""
+"More records were removed by cascade than the configured maximum:\n"
+"                        only part of them was captured."
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,help:mrz_deletion_audit.field_mrz_deletion_audit_log__cascade_truncated
+msgid ""
+"More records were removed by cascade than the configured maximum; only part "
+"of them was captured."
+msgstr ""
+
+#. module: mrz_deletion_audit
+#. odoo-python
+#: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+msgid "No"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#. odoo-python
+#: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+msgid "No data captured."
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.actions.act_window,help:mrz_deletion_audit.action_mrz_deletion_audit_log
+msgid "No deletion logged yet"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__origin
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_search
+msgid "Origin"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__origin_detail
+msgid "Origin Details"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__snapshot_text
+msgid "Raw Data (JSON)"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:res.groups,comment:mrz_deletion_audit.group_mrz_deletion_audit_manager
+msgid "Reads all deletion logs and configures the tracking rules."
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:res.groups,comment:mrz_deletion_audit.group_mrz_deletion_audit_user
+msgid "Reads the deletion logs of the models the user is allowed to read."
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__res_id
+msgid "Record ID"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__request_path
+msgid "Request Path"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.res_config_settings_view_form
+msgid "Retention"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__related_count
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_form
+msgid "Same Transaction"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields.selection,name:mrz_deletion_audit.selection__mrz_deletion_audit_log__origin__cron
+msgid "Scheduled Action"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_search
+msgid "Scheduled Actions"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.actions.act_window,name:mrz_deletion_audit.action_mrz_deletion_audit_settings
+#: model:ir.ui.menu,name:mrz_deletion_audit.menu_mrz_deletion_audit_settings
+msgid "Settings"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#. odoo-python
+#: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+msgid "Size"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields.selection,name:mrz_deletion_audit.selection__mrz_deletion_audit_log__origin__system
+msgid "System / Script"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_form
+msgid "Technical"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__model_name
+msgid "Technical Model"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_rule__model_name
+msgid "Technical Name"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#. odoo-python
+#: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+msgid "The data of this record could not be captured."
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,help:mrz_deletion_audit.field_mrz_deletion_audit_log__session_user_id
+msgid ""
+"The user logged in to the browser session, when it differs from the user who"
+" performed the deletion (e.g. an action running as another user)."
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.constraint,message:mrz_deletion_audit.constraint_mrz_deletion_audit_rule_model_uniq
+msgid "There is already a deletion audit rule for this model."
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields.selection,name:mrz_deletion_audit.selection__mrz_deletion_audit_rule__mode__track
+msgid "Track"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_res_config_settings__mrz_deletion_audit_track_all
+msgid "Track All Business Models"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,help:mrz_deletion_audit.field_mrz_deletion_audit_rule__mode
+msgid ""
+"Track: log every deletion of this model.\n"
+"Ignore: never log them, even when 'Track All Business Models' is enabled or when they are removed by cascade."
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_rule_view_search
+msgid "Tracked"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.res_config_settings_view_form
+msgid "Tracking"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.actions.act_window,name:mrz_deletion_audit.action_mrz_deletion_audit_rule
+#: model:ir.ui.menu,name:mrz_deletion_audit.menu_mrz_deletion_audit_rule
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.res_config_settings_view_form
+msgid "Tracking Rules"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__transaction_ref
+msgid "Transaction"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#. odoo-python
+#: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+msgid "Type"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.actions.act_url,name:mrz_deletion_audit.action_mrz_deletion_audit_user_guide
+#: model:ir.ui.menu,name:mrz_deletion_audit.menu_mrz_deletion_audit_user_guide
+msgid "User Guide"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields.selection,name:mrz_deletion_audit.selection__mrz_deletion_audit_log__origin__ui
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_search
+msgid "User Interface"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#. odoo-python
+#: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+msgid "Value"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields.selection,name:mrz_deletion_audit.selection__mrz_deletion_audit_log__origin__http
+msgid "Website / Portal"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#. odoo-python
+#: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+msgid "Yes"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.res_config_settings_view_form
+msgid "days"
+msgstr ""
