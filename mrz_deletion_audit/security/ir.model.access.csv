@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mrz_deletion_audit_log_user,mrz.deletion.audit.log user,model_mrz_deletion_audit_log,group_mrz_deletion_audit_user,1,0,0,0
+access_mrz_deletion_audit_rule_user,mrz.deletion.audit.rule user,model_mrz_deletion_audit_rule,group_mrz_deletion_audit_user,1,0,0,0
+access_mrz_deletion_audit_rule_manager,mrz.deletion.audit.rule manager,model_mrz_deletion_audit_rule,group_mrz_deletion_audit_manager,1,1,1,1

@@ -1,0 +1,135 @@
+<section class="container" style="max-width: 1100px;">
+
+    <!-- Hero -->
+    <div class="row py-5 align-items-center">
+        <div class="col-md-8">
+            <h1 style="color: #3730A3; font-weight: 700;">Deletion Audit Trail</h1>
+            <h3 class="text-muted" style="font-weight: 400;">
+                Know <b>who</b> deleted <b>which record</b>, <b>when</b>, and <b>what it contained</b>.
+            </h3>
+            <p class="lead mt-3">
+                A record disappears and nobody knows what happened? Standard Odoo keeps no trace
+                of deleted records. Deletion Audit Trail keeps a permanent, read-only log of every
+                deletion, with a full snapshot of the data, including the lines and child records
+                that were deleted with it.
+            </p>
+        </div>
+        <div class="col-md-4 text-center">
+            <img src="icon.png" alt="Deletion Audit Trail" style="width: 180px; max-width: 100%;"/>
+        </div>
+    </div>
+
+    <!-- Key features -->
+    <div class="row g-4 pb-4">
+        <div class="col-md-4">
+            <div class="h-100 p-4 rounded" style="background: #EEF2FF;">
+                <h4 style="color: #3730A3;">Who, when, from where</h4>
+                <p class="mb-0">User, date and time, IP address, browser, and channel:
+                    user interface, external API, website, scheduled action or script.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="h-100 p-4 rounded" style="background: #EEF2FF;">
+                <h4 style="color: #3730A3;">Full data snapshot</h4>
+                <p class="mb-0">Every field of the deleted record, readable field by field:
+                    customer names, tags, amounts, dates and statuses, plus the list of its attachments.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="h-100 p-4 rounded" style="background: #EEF2FF;">
+                <h4 style="color: #3730A3;">Lines &amp; child records</h4>
+                <p class="mb-0">Invoice lines, order lines, stock moves... the records deleted
+                    together with the main record are captured too, and linked to it.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="h-100 p-4 rounded" style="background: #EEF2FF;">
+                <h4 style="color: #3730A3;">Captured before anything changes</h4>
+                <p class="mb-0">The snapshot is taken before Odoo starts deleting, so you see the
+                    record as it really was, not a half-cancelled version.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="h-100 p-4 rounded" style="background: #EEF2FF;">
+                <h4 style="color: #3730A3;">Search deleted data</h4>
+                <p class="mb-0">Find a deleted record by any value it contained: an email,
+                    a reference, an amount, a product name...</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="h-100 p-4 rounded" style="background: #EEF2FF;">
+                <h4 style="color: #3730A3;">Tamper-proof</h4>
+                <p class="mb-0">Nobody can edit or delete a log from the interface, not even
+                    administrators. Logs are only removed by your retention policy.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- How it works -->
+    <div class="row py-4">
+        <div class="col-12">
+            <h2 style="color: #3730A3;">How it works</h2>
+            <ol class="lead">
+                <li>Install the app: the main business documents (contacts, products, quotations,
+                    invoices, transfers, projects, tasks, employees...) are tracked out of the box.</li>
+                <li>Add or remove models in <b>Deletion Audit &gt; Configuration &gt; Tracking Rules</b>,
+                    or enable <b>Track All Business Models</b> in the settings.</li>
+                <li>Open <b>Deletion Audit &gt; Deleted Records</b> to see every deletion, group them
+                    by user, document type or date, and analyse them in pivot and graph views.</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Details -->
+    <div class="row g-4 py-4">
+        <div class="col-md-6">
+            <h3 style="color: #3730A3;">Tracking rules</h3>
+            <ul>
+                <li>Track specific models, or all business models at once</li>
+                <li>Ignore the models you do not care about</li>
+                <li>Exclude sensitive fields from the snapshot</li>
+                <li>Turn the capture of child records on or off per model</li>
+                <li>Technical models are skipped automatically</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h3 style="color: #3730A3;">Security &amp; privacy</h3>
+            <ul>
+                <li><b>Auditors</b> only see the logs of the models they are allowed to read</li>
+                <li><b>Administrators</b> see all logs and manage the rules</li>
+                <li>Multi-company: logs follow the company of the deleted record</li>
+                <li>Passwords, tokens and secrets are never stored</li>
+                <li>Retention policy: purge logs automatically after N days</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h3 style="color: #3730A3;">Reliable by design</h3>
+            <ul>
+                <li>The log is written in the same transaction as the deletion:
+                    if the deletion fails, no log is kept</li>
+                <li>Records archived instead of deleted are not logged</li>
+                <li>Bulk deletions of thousands of records are captured in batches</li>
+                <li>A capture problem never blocks the deletion itself</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h3 style="color: #3730A3;">Deletions made together</h3>
+            <ul>
+                <li>See every record deleted in the same operation</li>
+                <li>Browse the tree of cascaded records</li>
+                <li>Know which field linked a child record to its parent</li>
+                <li>Know when a user acted through another user's session</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Support -->
+    <div class="row py-5">
+        <div class="col-12 text-center p-4 rounded" style="background: #3730A3; color: #FFFFFF;">
+            <h3 style="color: #FFFFFF;">Need help or a customization?</h3>
+            <p class="lead mb-0">Contact <b>Muhammad Ramzan</b>. Questions, bug reports and feature
+                requests are welcome.</p>
+        </div>
+    </div>
+
+</section>

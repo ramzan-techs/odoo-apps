@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_mrz_deletion_audit_root"
+              name="Deletion Audit"
+              web_icon="mrz_deletion_audit,static/description/icon.png"
+              groups="group_mrz_deletion_audit_user"
+              sequence="95"/>
+
+    <menuitem id="menu_mrz_deletion_audit_log"
+              name="Deleted Records"
+              parent="menu_mrz_deletion_audit_root"
+              action="action_mrz_deletion_audit_log"
+              sequence="10"/>
+
+    <menuitem id="menu_mrz_deletion_audit_analysis"
+              name="Analysis"
+              parent="menu_mrz_deletion_audit_root"
+              action="action_mrz_deletion_audit_log_analysis"
+              sequence="20"/>
+
+    <menuitem id="menu_mrz_deletion_audit_config"
+              name="Configuration"
+              parent="menu_mrz_deletion_audit_root"
+              groups="group_mrz_deletion_audit_manager"
+              sequence="90"/>
+
+    <menuitem id="menu_mrz_deletion_audit_rule"
+              name="Tracking Rules"
+              parent="menu_mrz_deletion_audit_config"
+              action="action_mrz_deletion_audit_rule"
+              sequence="10"/>
+
+    <menuitem id="menu_mrz_deletion_audit_settings"
+              name="Settings"
+              parent="menu_mrz_deletion_audit_config"
+              action="action_mrz_deletion_audit_settings"
+              groups="base.group_system"
+              sequence="20"/>
+</odoo>

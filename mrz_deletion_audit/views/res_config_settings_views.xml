@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.mrz_deletion_audit</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="90"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Deletion Audit" string="Deletion Audit" name="mrz_deletion_audit"
+                     groups="mrz_deletion_audit.group_mrz_deletion_audit_manager">
+                    <block title="Tracking" name="mrz_deletion_audit_tracking">
+                        <setting id="mrz_deletion_audit_track_all"
+                                 help="Log the deletions of every business model, not only the models listed in the tracking rules. Technical models are skipped.">
+                            <field name="mrz_deletion_audit_track_all"/>
+                            <div class="content-group">
+                                <div class="mt8">
+                                    <button name="%(mrz_deletion_audit.action_mrz_deletion_audit_rule)d"
+                                            string="Tracking Rules" type="action" class="oe_link" icon="oi-arrow-right"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting id="mrz_deletion_audit_max_cascade" string="Cascaded Records"
+                                 help="Maximum number of child records captured when one deletion cascades to many records.">
+                            <field name="mrz_deletion_audit_max_cascade"/>
+                        </setting>
+                    </block>
+                    <block title="Retention" name="mrz_deletion_audit_retention">
+                        <setting id="mrz_deletion_audit_retention" string="Keep Logs For"
+                                 help="Logs older than this are purged automatically every day. Set 0 to keep them forever.">
+                            <field name="mrz_deletion_audit_retention_days" class="oe_inline"/> days
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_mrz_deletion_audit_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'mrz_deletion_audit', 'bin_size': False}</field>
+    </record>
+</odoo>

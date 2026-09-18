@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrz_deletion_audit_log_view_list" model="ir.ui.view">
+        <field name="name">mrz.deletion.audit.log.list</field>
+        <field name="model">mrz.deletion.audit.log</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0" decoration-muted="parent_id">
+                <field name="deletion_date"/>
+                <field name="user_id" widget="many2one_avatar"/>
+                <field name="model_description"/>
+                <field name="name"/>
+                <field name="res_id" optional="show"/>
+                <field name="origin" widget="badge" optional="show"
+                       decoration-info="origin == 'ui'" decoration-warning="origin in ('api', 'cron')"
+                       decoration-muted="origin == 'cascade'"/>
+                <field name="child_count" optional="show"/>
+                <field name="attachment_count" optional="hide"/>
+                <field name="ip_address" optional="hide"/>
+                <field name="model_name" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="parent_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mrz_deletion_audit_log_view_form" model="ir.ui.view">
+        <field name="name">mrz.deletion.audit.log.form</field>
+        <field name="model">mrz.deletion.audit.log</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0" delete="0">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_children" type="object" class="oe_stat_button"
+                                icon="fa-sitemap" invisible="not child_count">
+                            <field name="child_count" widget="statinfo" string="Cascaded"/>
+                        </button>
+                        <button name="action_view_same_transaction" type="object" class="oe_stat_button"
+                                icon="fa-link" invisible="not related_count">
+                            <field name="related_count" widget="statinfo" string="Same Transaction"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Deleted Record">
+                            <field name="model_description"/>
+                            <field name="model_name"/>
+                            <field name="res_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="parent_id" invisible="not parent_id"/>
+                            <field name="cascade_field" invisible="not cascade_field"/>
+                        </group>
+                        <group string="Deleted By">
+                            <field name="user_id" widget="many2one_avatar"/>
+                            <field name="session_user_id" widget="many2one_avatar" invisible="not session_user_id"/>
+                            <field name="deletion_date"/>
+                            <field name="origin"/>
+                            <field name="origin_detail" invisible="not origin_detail"/>
+                            <field name="ip_address" invisible="not ip_address"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-warning" role="alert" invisible="not cascade_truncated">
+                        More records were removed by cascade than the configured maximum:
+                        only part of them was captured.
+                    </div>
+                    <notebook>
+                        <page string="Deleted Data" name="deleted_data">
+                            <field name="snapshot_html" nolabel="1"/>
+                        </page>
+                        <page string="Attachments" name="attachments" invisible="not attachment_count">
+                            <field name="attachment_html" nolabel="1"/>
+                        </page>
+                        <page string="Cascaded Records" name="cascaded_records" invisible="not child_count">
+                            <field name="child_ids">
+                                <list>
+                                    <field name="model_description"/>
+                                    <field name="name"/>
+                                    <field name="res_id"/>
+                                    <field name="cascade_field"/>
+                                    <field name="child_count"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Technical" name="technical"
+                              groups="mrz_deletion_audit.group_mrz_deletion_audit_manager">
+                            <group>
+                                <field name="user_agent"/>
+                                <field name="request_path"/>
+                                <field name="transaction_ref"/>
+                            </group>
+                            <field name="snapshot_text" nolabel="1" class="font-monospace"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mrz_deletion_audit_log_view_search" model="ir.ui.view">
+        <field name="name">mrz.deletion.audit.log.search</field>
+        <field name="model">mrz.deletion.audit.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="model_description"/>
+                <field name="model_name"/>
+                <field name="user_id"/>
+                <field name="res_id"/>
+                <field name="snapshot_search"/>
+                <field name="ip_address"/>
+                <field name="transaction_ref"/>
+                <filter name="filter_direct" string="Direct Deletions" domain="[('parent_id', '=', False)]"/>
+                <filter name="filter_cascade" string="Cascaded" domain="[('parent_id', '!=', False)]"/>
+                <separator/>
+                <filter name="filter_mine" string="Deleted by Me" domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <filter name="filter_ui" string="User Interface" domain="[('origin', '=', 'ui')]"/>
+                <filter name="filter_api" string="External API" domain="[('origin', '=', 'api')]"/>
+                <filter name="filter_cron" string="Scheduled Actions" domain="[('origin', '=', 'cron')]"/>
+                <separator/>
+                <filter name="filter_deletion_date" string="Deletion Date" date="deletion_date"/>
+                <group>
+                    <filter name="groupby_model" string="Document Type" context="{'group_by': 'model_description'}"/>
+                    <filter name="groupby_user" string="Deleted By" context="{'group_by': 'user_id'}"/>
+                    <filter name="groupby_origin" string="Origin" context="{'group_by': 'origin'}"/>
+                    <filter name="groupby_date" string="Deletion Date" context="{'group_by': 'deletion_date:day'}"/>
+                    <filter name="groupby_company" string="Company" context="{'group_by': 'company_id'}"
+                            groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="mrz_deletion_audit_log_view_pivot" model="ir.ui.view">
+        <field name="name">mrz.deletion.audit.log.pivot</field>
+        <field name="model">mrz.deletion.audit.log</field>
+        <field name="arch" type="xml">
+            <pivot string="Deletions" sample="1">
+                <field name="model_description" type="row"/>
+                <field name="deletion_date" interval="month" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="mrz_deletion_audit_log_view_graph" model="ir.ui.view">
+        <field name="name">mrz.deletion.audit.log.graph</field>
+        <field name="model">mrz.deletion.audit.log</field>
+        <field name="arch" type="xml">
+            <graph string="Deletions" type="bar" stacked="1" sample="1">
+                <field name="deletion_date" interval="day"/>
+                <field name="user_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_mrz_deletion_audit_log" model="ir.actions.act_window">
+        <field name="name">Deleted Records</field>
+        <field name="res_model">mrz.deletion.audit.log</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="search_view_id" ref="mrz_deletion_audit_log_view_search"/>
+        <field name="context">{'search_default_filter_direct': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No deletion logged yet</p>
+            <p>Every time a record of a tracked model is deleted, you will find here
+                who deleted it, when, from where, and all the data it contained.</p>
+        </field>
+    </record>
+
+    <record id="action_mrz_deletion_audit_log_analysis" model="ir.actions.act_window">
+        <field name="name">Deletion Analysis</field>
+        <field name="res_model">mrz.deletion.audit.log</field>
+        <field name="view_mode">graph,pivot,list,form</field>
+        <field name="search_view_id" ref="mrz_deletion_audit_log_view_search"/>
+        <field name="context">{'search_default_filter_direct': 1}</field>
+    </record>
+</odoo>

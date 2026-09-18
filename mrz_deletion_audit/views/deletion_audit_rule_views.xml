@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrz_deletion_audit_rule_view_list" model="ir.ui.view">
+        <field name="name">mrz.deletion.audit.rule.list</field>
+        <field name="model">mrz.deletion.audit.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="model_id"/>
+                <field name="model_name" optional="show"/>
+                <field name="mode" widget="badge"
+                       decoration-success="mode == 'track'" decoration-muted="mode == 'ignore'"/>
+                <field name="capture_children" optional="show"/>
+                <field name="log_count" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mrz_deletion_audit_rule_view_form" model="ir.ui.view">
+        <field name="name">mrz.deletion.audit.rule.form</field>
+        <field name="model">mrz.deletion.audit.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_logs" type="object" class="oe_stat_button" icon="fa-trash-o">
+                            <field name="log_count" widget="statinfo" string="Deletions"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="model_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="model_name"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="mode" widget="radio"/>
+                            <field name="capture_children" invisible="mode != 'track'"/>
+                        </group>
+                    </group>
+                    <notebook invisible="mode != 'track'">
+                        <page string="Excluded Fields" name="excluded_fields">
+                            <field name="excluded_field_ids" options="{'no_create': True}">
+                                <list>
+                                    <field name="field_description"/>
+                                    <field name="name"/>
+                                    <field name="ttype"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mrz_deletion_audit_rule_view_search" model="ir.ui.view">
+        <field name="name">mrz.deletion.audit.rule.search</field>
+        <field name="model">mrz.deletion.audit.rule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="model_id"/>
+                <field name="model_name"/>
+                <filter name="filter_track" string="Tracked" domain="[('mode', '=', 'track')]"/>
+                <filter name="filter_ignore" string="Ignored" domain="[('mode', '=', 'ignore')]"/>
+                <separator/>
+                <filter name="filter_archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_mrz_deletion_audit_rule" model="ir.actions.act_window">
+        <field name="name">Tracking Rules</field>
+        <field name="res_model">mrz.deletion.audit.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Choose which models to audit</p>
+            <p>Add a rule for each model whose deletions must be logged,
+                or enable "Track All Business Models" in the settings and use rules to ignore some models.</p>
+        </field>
+    </record>
+</odoo>

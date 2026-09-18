@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="ir_cron_mrz_deletion_audit_purge" model="ir.cron">
+        <field name="name">Deletion Audit: Purge Old Logs</field>
+        <field name="model_id" ref="model_mrz_deletion_audit_log"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_purge_old_logs()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+</odoo>
