@@ -374,7 +374,7 @@
       <h3>The two blocks at the top</h3>
       <ul>
         <li><strong>Deleted Record</strong>: the document type, its technical model and ID, and its company. For a cascaded record, <em>Deleted Together With</em> links to the parent's log and <em>Linked Through</em> names the field that connected them.</li>
-        <li><strong>Deleted By</strong>: the user, the exact time, where the deletion came from (see the table below), the IP address and the browser. <em>Logged-in User</em> appears when an action ran as a different user from the person logged in.</li>
+        <li><strong>Deleted By</strong>: the user, the exact time, where the deletion came from (see the table below), the IP address and the browser. If every log shows the same IP address, see <a href="#faq-ip">Troubleshooting</a>. <em>Logged-in User</em> appears when an action ran as a different user from the person logged in.</li>
       </ul>
 
       <h3>The tabs</h3>
@@ -524,6 +524,23 @@
       <details>
         <summary>An auditor cannot find a log that I can see</summary>
         <div><p>Auditors only see logs of the document types they can read in Odoo. Give them read access to that app, or the <em>Administrator</em> level.</p></div>
+      </details>
+      <details id="faq-ip">
+        <summary>Every log shows the same IP address, such as 127.0.0.1</summary>
+        <div>
+          <p>Odoo sees the address of the machine that connects to it directly. If you open Odoo on the server itself, that is <code>127.0.0.1</code>. If Odoo runs behind a reverse proxy (nginx, Apache, a load balancer), it is the proxy's address for every user. To record each user's real address:</p>
+          <ol>
+            <li>In the Odoo configuration file, add:
+<pre><code>proxy_mode = True</code></pre></li>
+            <li>Make the proxy send the user's address <strong>and</strong> the host name. Odoo ignores the forwarded address when <code>X-Forwarded-Host</code> is missing. For nginx, in the <code>location</code> blocks that pass requests to Odoo:
+<pre><code>proxy_set_header X-Forwarded-Host  $host;
+proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+proxy_set_header X-Forwarded-Proto $scheme;
+proxy_set_header X-Real-IP         $remote_addr;</code></pre></li>
+            <li>Restart Odoo and reload the proxy. New deletions record the real address; existing logs keep the one they recorded.</li>
+          </ol>
+          <p>Only turn on <code>proxy_mode</code> when Odoo is reachable through the proxy alone. Otherwise anyone connecting directly could send a fake address.</p>
+        </div>
       </details>
       <details>
         <summary>Why does the User Agent mention Mozilla, Safari and Chrome at once?</summary>
