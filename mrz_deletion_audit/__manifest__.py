@@ -20,6 +20,7 @@ Keeps a permanent, read-only trace of every tracked record deletion:
     'category': 'Extra Tools',
     'author': 'Muhammad Ramzan',
     'maintainer': 'Muhammad Ramzan',
+    'support': 'techsramzan@gmail.com',
     'license': 'LGPL-3',
     'depends': ['base_setup'],
     'data': [
