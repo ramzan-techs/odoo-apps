@@ -19,7 +19,7 @@
                 <field name="client_name" optional="hide"/>
                 <field name="model_name" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
-                <field name="parent_id" column_invisible="1"/>
+                <field name="parent_id" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -32,11 +32,11 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_children" type="object" class="oe_stat_button"
-                                icon="fa-sitemap" invisible="not child_count">
+                                icon="fa-sitemap" attrs="{'invisible': [('child_count', '=', 0)]}">
                             <field name="child_count" widget="statinfo" string="Cascaded"/>
                         </button>
                         <button name="action_view_same_transaction" type="object" class="oe_stat_button"
-                                icon="fa-link" invisible="not related_count">
+                                icon="fa-link" attrs="{'invisible': [('related_count', '=', 0)]}">
                             <field name="related_count" widget="statinfo" string="Same Transaction"/>
                         </button>
                     </div>
@@ -50,22 +50,22 @@
                             <field name="model_name"/>
                             <field name="res_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="parent_id" invisible="not parent_id"/>
-                            <field name="cascade_field" invisible="not cascade_field"/>
+                            <field name="parent_id" attrs="{'invisible': [('parent_id', '=', False)]}"/>
+                            <field name="cascade_field" attrs="{'invisible': [('cascade_field', '=', False)]}"/>
                             <field name="cascade_truncated" invisible="1"/>
                             <field name="attachment_count" invisible="1"/>
                         </group>
                         <group string="Deleted By">
                             <field name="user_id" widget="many2one_avatar"/>
-                            <field name="session_user_id" widget="many2one_avatar" invisible="not session_user_id"/>
+                            <field name="session_user_id" widget="many2one_avatar" attrs="{'invisible': [('session_user_id', '=', False)]}"/>
                             <field name="deletion_date"/>
                             <field name="origin"/>
-                            <field name="origin_detail" invisible="not origin_detail"/>
-                            <field name="ip_address" invisible="not ip_address"/>
-                            <field name="client_name" invisible="not client_name"/>
+                            <field name="origin_detail" attrs="{'invisible': [('origin_detail', '=', False)]}"/>
+                            <field name="ip_address" attrs="{'invisible': [('ip_address', '=', False)]}"/>
+                            <field name="client_name" attrs="{'invisible': [('client_name', '=', False)]}"/>
                         </group>
                     </group>
-                    <div class="alert alert-warning" role="alert" invisible="not cascade_truncated">
+                    <div class="alert alert-warning" role="alert" attrs="{'invisible': [('cascade_truncated', '=', False)]}">
                         More records were removed by cascade than the configured maximum:
                         only part of them was captured.
                     </div>
@@ -73,10 +73,10 @@
                         <page string="Deleted Data" name="deleted_data">
                             <field name="snapshot_html" nolabel="1"/>
                         </page>
-                        <page string="Attachments" name="attachments" invisible="not attachment_count">
+                        <page string="Attachments" name="attachments" attrs="{'invisible': [('attachment_count', '=', 0)]}">
                             <field name="attachment_html" nolabel="1"/>
                         </page>
-                        <page string="Cascaded Records" name="cascaded_records" invisible="not child_count">
+                        <page string="Cascaded Records" name="cascaded_records" attrs="{'invisible': [('child_count', '=', 0)]}">
                             <field name="child_ids">
                                 <tree>
                                     <field name="model_description"/>

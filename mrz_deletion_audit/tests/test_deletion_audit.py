@@ -54,7 +54,7 @@ class TestDeletionAudit(TransactionCase):
         self.assertEqual(log.origin, 'system')
         self.assertEqual(log.model_id.model, 'res.partner')
         self.assertTrue(log.transaction_ref)
-        snapshot = log.snapshot
+        snapshot = log._get_snapshot()
         self.assertEqual(snapshot['email']['value'], 'deleted.partner@example.com')
         self.assertEqual(snapshot['country_id']['value'], country.id)
         self.assertEqual(snapshot['country_id']['display'], country.display_name)
@@ -101,7 +101,7 @@ class TestDeletionAudit(TransactionCase):
         self.assertEqual(child_log.origin, 'cascade')
         self.assertEqual(child_log.cascade_field, 'partner_id')
         self.assertEqual(child_log.transaction_ref, parent_log.transaction_ref)
-        self.assertEqual(child_log.snapshot['acc_number']['value'], 'BE71096123456769')
+        self.assertEqual(child_log._get_snapshot()['acc_number']['value'], 'BE71096123456769')
         self.assertEqual(parent_log.child_count, 1)
 
     def test_cascade_capture_can_be_disabled(self):

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-18 10:13+0000\n"
-"PO-Revision-Date: 2026-09-18 10:13+0000\n"
+"POT-Creation-Date: 2026-09-18 11:01+0000\n"
+"PO-Revision-Date: 2026-09-18 11:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,14 +16,12 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: mrz_deletion_audit
-#. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
 #, python-format
 msgid "(and %(count)s more)"
 msgstr ""
 
 #. module: mrz_deletion_audit
-#. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
 #, python-format
 msgid "(binary data)"
@@ -118,7 +116,6 @@ msgid "Cascaded"
 msgstr ""
 
 #. module: mrz_deletion_audit
-#. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
 #: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__child_ids
 #: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_form
@@ -216,14 +213,12 @@ msgid "Deleted by Me"
 msgstr ""
 
 #. module: mrz_deletion_audit
-#. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
 #, python-format
 msgid "Deleted data can only be searched with 'contains'."
 msgstr ""
 
 #. module: mrz_deletion_audit
-#. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
 #, python-format
 msgid "Deleted in the Same Transaction"
@@ -253,6 +248,8 @@ msgstr ""
 
 #. module: mrz_deletion_audit
 #: model:ir.actions.server,name:mrz_deletion_audit.ir_cron_mrz_deletion_audit_purge_ir_actions_server
+#: model:ir.cron,cron_name:mrz_deletion_audit.ir_cron_mrz_deletion_audit_purge
+#: model:ir.cron,name:mrz_deletion_audit.ir_cron_mrz_deletion_audit_purge
 msgid "Deletion Audit: Purge Old Logs"
 msgstr ""
 
@@ -311,7 +308,6 @@ msgid "External API"
 msgstr ""
 
 #. module: mrz_deletion_audit
-#. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
 #, python-format
 msgid "Field"
@@ -328,7 +324,6 @@ msgid "Fields never stored in the snapshot, e.g. sensitive data."
 msgstr ""
 
 #. module: mrz_deletion_audit
-#. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
 #, python-format
 msgid "File"
@@ -371,6 +366,12 @@ msgid "Keep Logs For"
 msgstr ""
 
 #. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log____last_update
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_rule____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: mrz_deletion_audit
 #: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__write_uid
 #: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_rule__write_uid
 msgid "Last Updated by"
@@ -390,8 +391,8 @@ msgstr ""
 #. module: mrz_deletion_audit
 #: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.res_config_settings_view_form
 msgid ""
-"Log the deletions of every business model, not only the models listed in the"
-" tracking rules. Technical models are skipped."
+"Log the deletions of every business model, not only the models listed\n"
+"                                    in the tracking rules. Technical models are skipped."
 msgstr ""
 
 #. module: mrz_deletion_audit
@@ -444,14 +445,12 @@ msgid ""
 msgstr ""
 
 #. module: mrz_deletion_audit
-#. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
 #, python-format
 msgid "No"
 msgstr ""
 
 #. module: mrz_deletion_audit
-#. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
 #, python-format
 msgid "No data captured."
@@ -476,6 +475,11 @@ msgstr ""
 #. module: mrz_deletion_audit
 #: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__snapshot_text
 msgid "Raw Data (JSON)"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__readable_by_user
+msgid "Readable By User"
 msgstr ""
 
 #. module: mrz_deletion_audit
@@ -527,7 +531,6 @@ msgid "Settings"
 msgstr ""
 
 #. module: mrz_deletion_audit
-#. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
 #, python-format
 msgid "Size"
@@ -554,7 +557,11 @@ msgid "Technical Name"
 msgstr ""
 
 #. module: mrz_deletion_audit
-#. odoo-python
+#: model:ir.model.fields,help:mrz_deletion_audit.field_mrz_deletion_audit_log__readable_by_user
+msgid "The current user has read access to the deleted record's model."
+msgstr ""
+
+#. module: mrz_deletion_audit
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
 #, python-format
 msgid "The data of this record could not be captured."
@@ -612,10 +619,15 @@ msgid "Transaction"
 msgstr ""
 
 #. module: mrz_deletion_audit
-#. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
 #, python-format
 msgid "Type"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+#, python-format
+msgid "Unsupported search on 'readable by user'."
 msgstr ""
 
 #. module: mrz_deletion_audit
@@ -636,7 +648,6 @@ msgid "User Interface"
 msgstr ""
 
 #. module: mrz_deletion_audit
-#. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
 #, python-format
 msgid "Value"
@@ -648,7 +659,6 @@ msgid "Website / Portal"
 msgstr ""
 
 #. module: mrz_deletion_audit
-#. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
 #, python-format
 msgid "Yes"

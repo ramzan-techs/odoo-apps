@@ -13,7 +13,7 @@ from markupsafe import Markup
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.http import request
-from odoo.tools import SQL, html2plaintext, split_every
+from odoo.tools import html2plaintext, split_every
 
 _logger = logging.getLogger(__name__)
 
@@ -123,8 +123,9 @@ class DeletionAuditLog(models.Model):
         help="More records were removed by cascade than the configured maximum; "
              "only part of them was captured.",
     )
-    snapshot = fields.Json(string='Data', readonly=True)
-    attachment_info = fields.Json(string='Attachment Data', readonly=True)
+    # JSON documents (Odoo 15 has no Json field): use _get_snapshot() / _get_attachment_info()
+    snapshot = fields.Text(string='Data', readonly=True)
+    attachment_info = fields.Text(string='Attachment Data', readonly=True)
     attachment_count = fields.Integer(string='Attachments', readonly=True)
     snapshot_html = fields.Html(string='Deleted Data', compute='_compute_snapshot_display', sanitize=False)
     snapshot_text = fields.Text(string='Raw Data (JSON)', compute='_compute_snapshot_display')
@@ -133,11 +134,45 @@ class DeletionAuditLog(models.Model):
     snapshot_search = fields.Char(string='Deleted Data Contains', compute='_compute_snapshot_search',
                                   search='_search_snapshot_search')
     related_count = fields.Integer(compute='_compute_related_count', string='Same Transaction')
+    readable_by_user = fields.Boolean(compute='_compute_readable_by_user', search='_search_readable_by_user',
+                                      help="The current user has read access to the deleted record's model.")
 
-    @api.depends('name', 'model_description')
-    def _compute_display_name(self):
+    def name_get(self):
+        return [
+            (log.id, f"{log.model_description}: {log.name}" if log.model_description else log.name)
+            for log in self
+        ]
+
+    def _get_snapshot(self):
+        self.ensure_one()
+        return json.loads(self.snapshot) if self.snapshot else {}
+
+    def _get_attachment_info(self):
+        self.ensure_one()
+        return json.loads(self.attachment_info) if self.attachment_info else []
+
+    @api.model
+    def _get_readable_model_ids(self):
+        # used by the auditors' record rule (Odoo 15 domains have no "any" operator)
+        self.env.cr.execute("""
+            SELECT DISTINCT model_id
+              FROM ir_model_access
+             WHERE active AND perm_read
+               AND (group_id IS NULL
+                    OR group_id IN (SELECT gid FROM res_groups_users_rel WHERE uid = %s))
+        """, [self.env.uid])
+        return [row[0] for row in self.env.cr.fetchall()]
+
+    def _compute_readable_by_user(self):
+        readable = set(self._get_readable_model_ids())
         for log in self:
-            log.display_name = f"{log.model_description}: {log.name}" if log.model_description else log.name
+            log.readable_by_user = log.model_id.id in readable
+
+    def _search_readable_by_user(self, operator, value):
+        if operator not in ('=', '!=') or not isinstance(value, bool):
+            raise UserError(_("Unsupported search on 'readable by user'."))
+        positive = (operator == '=') == value
+        return [('model_id', 'in' if positive else 'not in', self._get_readable_model_ids())]
 
     @api.depends('user_agent')
     def _compute_client_name(self):
@@ -145,13 +180,15 @@ class DeletionAuditLog(models.Model):
             log.client_name = describe_user_agent(log.user_agent)
 
     def _compute_child_count(self):
-        counts = dict(self._read_group([('parent_id', 'in', self.ids)], ['parent_id'], ['__count']))
+        groups = self.read_group([('parent_id', 'in', self.ids)], ['parent_id'], ['parent_id'])
+        counts = {group['parent_id'][0]: group['parent_id_count'] for group in groups}
         for log in self:
-            log.child_count = counts.get(log, 0)
+            log.child_count = counts.get(log.id, 0)
 
     def _compute_related_count(self):
         refs = [ref for ref in self.mapped('transaction_ref') if ref]
-        counts = dict(self._read_group([('transaction_ref', 'in', refs)], ['transaction_ref'], ['__count']))
+        groups = self.read_group([('transaction_ref', 'in', refs)], ['transaction_ref'], ['transaction_ref'])
+        counts = {group['transaction_ref']: group['transaction_ref_count'] for group in groups}
         for log in self:
             log.related_count = max(counts.get(log.transaction_ref, 0) - 1, 0)
 
@@ -160,9 +197,8 @@ class DeletionAuditLog(models.Model):
         for log in self:
             log.snapshot_html = log._render_snapshot_html()
             log.attachment_html = log._render_attachment_html()
-            log.snapshot_text = (
-                json.dumps(log.snapshot, indent=2, ensure_ascii=False) if log.snapshot else False
-            )
+            snapshot = log._get_snapshot()
+            log.snapshot_text = json.dumps(snapshot, indent=2, ensure_ascii=False) if snapshot else False
 
     def _compute_snapshot_search(self):
         self.snapshot_search = False
@@ -172,16 +208,12 @@ class DeletionAuditLog(models.Model):
             raise UserError(_("Deleted data can only be searched with 'contains'."))
         escaped = value.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_')
         # Match field values and display values only, not the field names / labels.
-        query = SQL(
-            """
+        self.env.cr.execute(f"""
             SELECT audit_log.id
-              FROM %s audit_log, jsonb_each(audit_log.snapshot) snapshot_item
+              FROM "{self._table}" audit_log, jsonb_each(audit_log.snapshot::jsonb) snapshot_item
              WHERE snapshot_item.value->>'value' ILIKE %s
                 OR snapshot_item.value->>'display' ILIKE %s
-            """,
-            SQL.identifier(self._table), f'%{escaped}%', f'%{escaped}%',
-        )
-        self.env.cr.execute(query)
+        """, [f'%{escaped}%', f'%{escaped}%'])
         return [('id', 'in', list({row[0] for row in self.env.cr.fetchall()}))]
 
     # ------------------------------------------------------------------
@@ -284,7 +316,11 @@ class DeletionAuditLog(models.Model):
 
     def _discard_not_deleted(self):
         survivors = self.browse()
-        for model_name, logs in self.grouped('model_name').items():
+        logs_by_model = {}
+        for log in self:
+            logs_by_model.setdefault(log.model_name, self.browse())
+            logs_by_model[log.model_name] |= log
+        for model_name, logs in logs_by_model.items():
             remaining = self.env[model_name].sudo().with_context(active_test=False).browse(
                 logs.mapped('res_id')).exists()
             if remaining:
@@ -391,7 +427,7 @@ class DeletionAuditLog(models.Model):
 
     @api.model
     def _get_transaction_ref(self):
-        self.env.cr.execute(SQL("SELECT txid_current()"))
+        self.env.cr.execute("SELECT txid_current()")
         return str(self.env.cr.fetchone()[0])
 
     @api.model
@@ -432,8 +468,8 @@ class DeletionAuditLog(models.Model):
                 model_description=ir_model.name,
                 res_id=record.id,
                 company_id=record.company_id.id if has_company else False,
-                snapshot=snapshots.get(record.id) or False,
-                attachment_info=record_attachments or False,
+                snapshot=json.dumps(snapshots[record.id], ensure_ascii=False) if snapshots.get(record.id) else False,
+                attachment_info=json.dumps(record_attachments, ensure_ascii=False) if record_attachments else False,
                 attachment_count=len(record_attachments),
             )
             if record.id in parent_links:
@@ -529,15 +565,12 @@ class DeletionAuditLog(models.Model):
 
     @api.model
     def _read_attachments(self, records):
-        self.env.cr.execute(SQL(
-            """
+        self.env.cr.execute("""
             SELECT id, res_id, name, mimetype, file_size
               FROM ir_attachment
              WHERE res_model = %s AND res_id IN %s AND res_field IS NULL
           ORDER BY id
-            """,
-            records._name, tuple(records.ids),
-        ))
+        """, [records._name, tuple(records.ids)])
         rows = self.env.cr.dictfetchall()
         attachments = {}
         for row in rows:
@@ -550,7 +583,7 @@ class DeletionAuditLog(models.Model):
 
     def _render_snapshot_html(self):
         self.ensure_one()
-        snapshot = self.snapshot or {}
+        snapshot = self._get_snapshot()
         if snapshot.get('__error__'):
             return Markup('<div class="alert alert-warning mb-0">%s<br/><code>%s</code></div>') % (
                 _("The data of this record could not be captured."), snapshot['__error__'],
@@ -558,7 +591,7 @@ class DeletionAuditLog(models.Model):
         if not snapshot:
             return Markup('<p class="text-muted">%s</p>') % _("No data captured.")
         rows = Markup().join(
-            Markup('<tr><td class="fw-bold text-nowrap" title="%s">%s</td>'
+            Markup('<tr><td class="font-weight-bold text-nowrap" title="%s">%s</td>'
                    '<td style="white-space: pre-wrap;">%s</td></tr>') % (
                 name, item.get('label') or name, self._format_snapshot_value(item),
             )
@@ -594,18 +627,19 @@ class DeletionAuditLog(models.Model):
 
     def _render_attachment_html(self):
         self.ensure_one()
-        if not self.attachment_info:
+        attachment_info = self._get_attachment_info()
+        if not attachment_info:
             return False
         rows = Markup().join(
-            Markup('<tr><td>%s</td><td>%s</td><td class="text-end">%s</td></tr>') % (
+            Markup('<tr><td>%s</td><td>%s</td><td class="text-right">%s</td></tr>') % (
                 attachment.get('name') or '', attachment.get('mimetype') or '',
                 tools.human_size(attachment.get('file_size') or 0) or '',
             )
-            for attachment in self.attachment_info
+            for attachment in attachment_info
         )
         return Markup(
             '<table class="table table-sm table-striped mb-0"><thead><tr><th>%s</th><th>%s</th>'
-            '<th class="text-end">%s</th></tr></thead><tbody>%s</tbody></table>'
+            '<th class="text-right">%s</th></tr></thead><tbody>%s</tbody></table>'
         ) % (_("File"), _("Type"), _("Size"), rows)
 
     # ------------------------------------------------------------------

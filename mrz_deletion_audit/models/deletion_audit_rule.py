@@ -68,26 +68,27 @@ class DeletionAuditRule(models.Model):
     ]
 
     def _compute_log_count(self):
-        counts = dict(self.env['mrz.deletion.audit.log']._read_group(
-            [('model_name', 'in', self.mapped('model_name'))], ['model_name'], ['__count'],
-        ))
+        groups = self.env['mrz.deletion.audit.log'].read_group(
+            [('model_name', 'in', self.mapped('model_name'))], ['model_name'], ['model_name'],
+        )
+        counts = {group['model_name']: group['model_name_count'] for group in groups}
         for rule in self:
             rule.log_count = counts.get(rule.model_name, 0)
 
     @api.model_create_multi
     def create(self, vals_list):
         rules = super().create(vals_list)
-        self.env.registry.clear_cache()
+        self.clear_caches()
         return rules
 
     def write(self, vals):
         res = super().write(vals)
-        self.env.registry.clear_cache()
+        self.clear_caches()
         return res
 
     def unlink(self):
         res = super().unlink()
-        self.env.registry.clear_cache()
+        self.clear_caches()
         return res
 
     def action_view_logs(self):

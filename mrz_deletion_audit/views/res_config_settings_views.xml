@@ -6,32 +6,60 @@
         <field name="priority" eval="90"/>
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//form" position="inside">
-                <app data-string="Deletion Audit" string="Deletion Audit" name="mrz_deletion_audit"
-                     groups="mrz_deletion_audit.group_mrz_deletion_audit_manager">
-                    <block title="Tracking" name="mrz_deletion_audit_tracking">
-                        <setting id="mrz_deletion_audit_track_all"
-                                 help="Log the deletions of every business model, not only the models listed in the tracking rules. Technical models are skipped.">
-                            <field name="mrz_deletion_audit_track_all"/>
-                            <div class="content-group">
-                                <div class="mt8">
-                                    <button name="%(mrz_deletion_audit.action_mrz_deletion_audit_rule)d"
-                                            string="Tracking Rules" type="action" class="oe_link" icon="oi-arrow-right"/>
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Deletion Audit" string="Deletion Audit"
+                     data-key="mrz_deletion_audit" groups="mrz_deletion_audit.group_mrz_deletion_audit_manager">
+                    <h2>Tracking</h2>
+                    <div class="row mt16 o_settings_container" name="mrz_deletion_audit_tracking">
+                        <div class="col-12 col-lg-6 o_setting_box" id="mrz_deletion_audit_track_all">
+                            <div class="o_setting_left_pane">
+                                <field name="mrz_deletion_audit_track_all"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="mrz_deletion_audit_track_all"/>
+                                <div class="text-muted">
+                                    Log the deletions of every business model, not only the models listed
+                                    in the tracking rules. Technical models are skipped.
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt8">
+                                        <button name="%(mrz_deletion_audit.action_mrz_deletion_audit_rule)d"
+                                                string="Tracking Rules" type="action" class="oe_link" icon="fa-arrow-right"/>
+                                    </div>
                                 </div>
                             </div>
-                        </setting>
-                        <setting id="mrz_deletion_audit_max_cascade" string="Cascaded Records"
-                                 help="Maximum number of child records captured when one deletion cascades to many records.">
-                            <field name="mrz_deletion_audit_max_cascade"/>
-                        </setting>
-                    </block>
-                    <block title="Retention" name="mrz_deletion_audit_retention">
-                        <setting id="mrz_deletion_audit_retention" string="Keep Logs For"
-                                 help="Logs older than this are purged automatically every day. Set 0 to keep them forever.">
-                            <field name="mrz_deletion_audit_retention_days" class="oe_inline"/> days
-                        </setting>
-                    </block>
-                </app>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="mrz_deletion_audit_max_cascade">
+                            <div class="o_setting_right_pane">
+                                <label for="mrz_deletion_audit_max_cascade" string="Cascaded Records"/>
+                                <div class="text-muted">
+                                    Maximum number of child records captured when one deletion cascades to many records.
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt8">
+                                        <field name="mrz_deletion_audit_max_cascade"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Retention</h2>
+                    <div class="row mt16 o_settings_container" name="mrz_deletion_audit_retention">
+                        <div class="col-12 col-lg-6 o_setting_box" id="mrz_deletion_audit_retention">
+                            <div class="o_setting_right_pane">
+                                <label for="mrz_deletion_audit_retention_days" string="Keep Logs For"/>
+                                <div class="text-muted">
+                                    Logs older than this are purged automatically every day. Set 0 to keep them forever.
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt8">
+                                        <field name="mrz_deletion_audit_retention_days" class="oe_inline"/> days
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </xpath>
         </field>
     </record>

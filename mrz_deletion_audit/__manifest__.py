@@ -16,7 +16,7 @@ Keeps a permanent, read-only trace of every tracked record deletion:
 * per-model tracking rules, or track every business model at once
 * retention policy with automatic purge
 """,
-    'version': '17.0.1.0.0',
+    'version': '15.0.1.0.0',
     'category': 'Extra Tools',
     'author': 'Muhammad Ramzan',
     'maintainer': 'Muhammad Ramzan',

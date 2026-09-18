@@ -31,10 +31,7 @@
     <record id="rule_mrz_deletion_audit_log_auditor" model="ir.rule">
         <field name="name">Deletion log: auditors see readable models</field>
         <field name="model_id" ref="model_mrz_deletion_audit_log"/>
-        <field name="domain_force">[('model_id', 'any', [('access_ids', 'any', [
-            ('perm_read', '=', True),
-            '|', ('group_id', '=', False), ('group_id', 'in', user.groups_id.ids),
-        ])])]</field>
+        <field name="domain_force">[('readable_by_user', '=', True)]</field>
         <field name="groups" eval="[Command.link(ref('group_mrz_deletion_audit_user'))]"/>
     </record>
 

@@ -1,7 +1,7 @@
 # Odoo Apps by Muhammad Ramzan
 
 Odoo modules published on the [Odoo Apps Store](https://apps.odoo.com).
-Each branch targets one Odoo version (`17.0`, `18.0`, `19.0`).
+Each branch targets one Odoo version (`15.0`, `17.0`, `18.0`, `19.0`).
 
 | Module | Description |
 |---|---|
