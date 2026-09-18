@@ -63,9 +63,9 @@ class DeletionAuditRule(models.Model):
     )
     log_count = fields.Integer(compute='_compute_log_count', string='Deletions')
 
-    _sql_constraints = [
-        ('model_uniq', 'unique(model_id)', 'There is already a deletion audit rule for this model.'),
-    ]
+    _model_uniq = models.Constraint(
+        'unique(model_id)', 'There is already a deletion audit rule for this model.',
+    )
 
     def _compute_log_count(self):
         counts = dict(self.env['mrz.deletion.audit.log']._read_group(

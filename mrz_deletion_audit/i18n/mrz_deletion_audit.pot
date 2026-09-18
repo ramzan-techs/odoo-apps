@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-18 10:06+0000\n"
-"PO-Revision-Date: 2026-09-18 10:06+0000\n"
+"POT-Creation-Date: 2026-09-18 10:43+0000\n"
+"PO-Revision-Date: 2026-09-18 10:43+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -84,8 +84,13 @@ msgid "Base"
 msgstr ""
 
 #. module: mrz_deletion_audit
-#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__user_agent
-msgid "Browser / Client"
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__client_name
+msgid "Browser"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,help:mrz_deletion_audit.field_mrz_deletion_audit_log__client_name
+msgid "Browser or program used, read from the user agent."
 msgstr ""
 
 #. module: mrz_deletion_audit
@@ -227,6 +232,7 @@ msgstr ""
 #. module: mrz_deletion_audit
 #: model:ir.module.category,name:mrz_deletion_audit.module_category_mrz_deletion_audit
 #: model:ir.ui.menu,name:mrz_deletion_audit.menu_mrz_deletion_audit_root
+#: model:res.groups.privilege,name:mrz_deletion_audit.res_groups_privilege_mrz_deletion_audit
 #: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.res_config_settings_view_form
 msgid "Deletion Audit"
 msgstr ""
@@ -272,6 +278,7 @@ msgstr ""
 #. module: mrz_deletion_audit
 #: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__display_name
 #: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_rule__display_name
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -325,12 +332,18 @@ msgstr ""
 #. module: mrz_deletion_audit
 #: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__id
 #: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_rule__id
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_res_config_settings__id
 msgid "ID"
 msgstr ""
 
 #. module: mrz_deletion_audit
 #: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__ip_address
 msgid "IP Address"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,help:mrz_deletion_audit.field_mrz_deletion_audit_log__user_agent
+msgid "Identification sent by the browser or program, as received."
 msgstr ""
 
 #. module: mrz_deletion_audit
@@ -593,6 +606,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
 msgid "Type"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__user_agent
+msgid "User Agent"
 msgstr ""
 
 #. module: mrz_deletion_audit

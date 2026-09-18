@@ -636,7 +636,11 @@ class DeletionAuditLog(models.Model):
             ('deletion_date', '<', fields.Datetime.now() - timedelta(days=days)),
             ('parent_id', '=', False),
         ]
-        logs = self.sudo().search(domain, limit=PURGE_BATCH_SIZE)
-        remaining = self.sudo().search_count(domain) - len(logs)
-        logs.unlink()  # cascaded children are removed by the database
-        self.env['ir.cron']._notify_progress(done=len(logs), remaining=remaining)
+        # _commit_progress() commits: only use it when running as a scheduled action
+        in_cron = bool(self.env.context.get('ir_cron_progress_id'))
+        if in_cron:
+            self.env['ir.cron']._commit_progress(remaining=self.sudo().search_count(domain))
+        while logs := self.sudo().search(domain, limit=PURGE_BATCH_SIZE):
+            logs.unlink()  # cascaded children are removed by the database
+            if in_cron and not self.env['ir.cron']._commit_progress(len(logs)):
+                break  # out of time: the scheduler runs the job again for the rest
