@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="action_mrz_deletion_audit_user_guide" model="ir.actions.act_url">
+        <field name="name">User Guide</field>
+        <field name="url">/mrz_deletion_audit/static/doc/user_guide.html</field>
+        <field name="target">new</field>
+    </record>
+
     <menuitem id="menu_mrz_deletion_audit_root"
               name="Deletion Audit"
               web_icon="mrz_deletion_audit,static/description/icon.png"
@@ -17,6 +23,12 @@
               parent="menu_mrz_deletion_audit_root"
               action="action_mrz_deletion_audit_log_analysis"
               sequence="20"/>
+
+    <menuitem id="menu_mrz_deletion_audit_user_guide"
+              name="User Guide"
+              parent="menu_mrz_deletion_audit_root"
+              action="action_mrz_deletion_audit_user_guide"
+              sequence="95"/>
 
     <menuitem id="menu_mrz_deletion_audit_config"
               name="Configuration"

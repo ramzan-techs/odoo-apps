@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deletion Audit Trail Guide</title>
+<style>
+  :root {
+    --ground: #F6F6FB;
+    --surface: #FFFFFF;
+    --sunken: #EEEEF6;
+    --ink: #1B1B33;
+    --ink-soft: #4B4B68;
+    --ink-faint: #7A7A96;
+    --rule: #DCDCEA;
+    --accent: #4338CA;
+    --accent-soft: #E6E4FB;
+    --amber: #B45309;
+    --amber-soft: #FEF3C7;
+    --ok: #047857;
+    --ok-soft: #D1FAE5;
+    --muted-badge: #E7E7EF;
+    --shadow: 0 1px 2px rgba(27, 27, 51, .06), 0 8px 24px rgba(27, 27, 51, .06);
+    --display: "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #12121F;
+      --surface: #1B1B2C;
+      --sunken: #232337;
+      --ink: #E9E9F5;
+      --ink-soft: #B7B7CE;
+      --ink-faint: #8A8AA6;
+      --rule: #2E2E46;
+      --accent: #A5A0FF;
+      --accent-soft: #2A2750;
+      --amber: #FBBF24;
+      --amber-soft: #3A2E12;
+      --ok: #34D399;
+      --ok-soft: #123329;
+      --muted-badge: #2C2C42;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #12121F;
+    --surface: #1B1B2C;
+    --sunken: #232337;
+    --ink: #E9E9F5;
+    --ink-soft: #B7B7CE;
+    --ink-faint: #8A8AA6;
+    --rule: #2E2E46;
+    --accent: #A5A0FF;
+    --accent-soft: #2A2750;
+    --amber: #FBBF24;
+    --amber-soft: #3A2E12;
+    --ok: #34D399;
+    --ok-soft: #123329;
+    --muted-badge: #2C2C42;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
+  }
+
+  * { box-sizing: border-box; }
+  html { color-scheme: light dark; }
+  body { margin: 0; }
+  img { max-width: 100%; }
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font: 16px/1.65 var(--body);
+    padding-inline: 20px;
+    padding-block: 0 64px;
+  }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  code, .mono { font-family: var(--mono); font-size: .88em; }
+  code { background: var(--sunken); padding: .1em .38em; border-radius: 4px; word-break: break-word; }
+
+  .shell {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 56px;
+  }
+
+  /* Header */
+  .masthead {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding-block: 56px 40px;
+    display: flex;
+    gap: 28px;
+    align-items: center;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 40px;
+  }
+  .mark {
+    width: 72px; height: 72px; flex: none;
+    border-radius: 18px;
+    background: var(--accent);
+    display: grid; place-items: center;
+  }
+  .mark svg { width: 44px; height: 44px; }
+  .masthead-text { flex: 1 1 420px; min-width: 0; }
+  .eyebrow {
+    font: 500 12px/1 var(--mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 10px;
+  }
+  h1 {
+    font: 700 clamp(2rem, 4.6vw, 3.1rem)/1.05 var(--display);
+    letter-spacing: -.02em;
+    margin: 0 0 12px;
+    text-wrap: balance;
+  }
+  .lede { font-size: 1.12rem; color: var(--ink-soft); margin: 0; max-width: 62ch; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 16px; font-size: .9rem; color: var(--ink-faint); }
+
+  /* TOC */
+  nav.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); align-self: start; font-size: .92rem; }
+  nav.toc p { font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); margin: 0 0 12px; }
+  nav.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; border-left: 1px solid var(--rule); }
+  nav.toc a { display: block; padding: 5px 0 5px 14px; margin-left: -1px; border-left: 2px solid transparent; color: var(--ink-soft); text-decoration: none; }
+  nav.toc a:hover { color: var(--accent); border-left-color: var(--accent); }
+
+  /* Content */
+  main { min-width: 0; }
+  section { padding-block: 8px 40px; scroll-margin-top: 24px; }
+  section + section { border-top: 1px solid var(--rule); padding-top: 40px; }
+  h2 {
+    font: 600 1.7rem/1.2 var(--display);
+    letter-spacing: -.01em;
+    margin: 0 0 14px;
+    text-wrap: balance;
+  }
+  h3 { font: 600 1.08rem/1.35 var(--body); margin: 28px 0 8px; }
+  p, li { max-width: 68ch; }
+  p { margin: 0 0 14px; }
+  ul, ol { padding-left: 1.3em; margin: 0 0 16px; }
+  li { margin-bottom: 6px; }
+  .muted { color: var(--ink-soft); }
+
+  .path {
+    display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px;
+    font: 500 .86rem/1.4 var(--body);
+    background: var(--accent-soft); color: var(--accent);
+    padding: 2px 10px; border-radius: 999px;
+    white-space: nowrap;
+  }
+  .path i { font-style: normal; opacity: .6; }
+
+  .steps { counter-reset: step; list-style: none; padding: 0; display: grid; gap: 14px; }
+  .steps > li { counter-increment: step; position: relative; padding-left: 46px; max-width: 72ch; }
+  .steps > li::before {
+    content: counter(step);
+    position: absolute; left: 0; top: 0;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--accent); color: var(--surface);
+    font: 600 .9rem/30px var(--mono); text-align: center;
+  }
+
+  .note {
+    border-radius: 10px; padding: 14px 18px; margin: 18px 0; max-width: 72ch;
+    background: var(--amber-soft); color: var(--ink);
+  }
+  .note strong:first-child { color: var(--amber); }
+  .tip { background: var(--ok-soft); }
+  .tip strong:first-child { color: var(--ok); }
+
+  .table-wrap { overflow-x: auto; margin: 14px 0 18px; border: 1px solid var(--rule); border-radius: 10px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: .93rem; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font: 600 .78rem/1.3 var(--body); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); background: var(--sunken); }
+  tr:last-child td { border-bottom: 0; }
+  td:first-child { white-space: nowrap; font-weight: 500; }
+
+  .badge {
+    display: inline-block; font: 600 .74rem/1 var(--body);
+    padding: 5px 9px; border-radius: 999px; white-space: nowrap;
+    background: var(--muted-badge); color: var(--ink-soft);
+  }
+  .badge.ui { background: var(--accent-soft); color: var(--accent); }
+  .badge.warn { background: var(--amber-soft); color: var(--amber); }
+  .badge.ok { background: var(--ok-soft); color: var(--ok); }
+
+  /* Mock of the log form */
+  .mock {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 14px;
+    box-shadow: var(--shadow); margin: 20px 0 10px; overflow: hidden;
+  }
+  .mock-bar {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center;
+    padding: 10px 16px; background: var(--sunken); border-bottom: 1px solid var(--rule);
+    font-size: .85rem; color: var(--ink-faint);
+  }
+  .mock-stats { display: flex; gap: 8px; flex-wrap: wrap; }
+  .stat {
+    border: 1px solid var(--rule); background: var(--surface); border-radius: 8px;
+    padding: 4px 12px; font-size: .8rem; color: var(--ink-soft); line-height: 1.3;
+  }
+  .stat b { display: block; color: var(--accent); font: 600 1rem/1.2 var(--mono); }
+  .mock-body { padding: 20px 22px 22px; }
+  .mock-label { font-size: .8rem; color: var(--ink-faint); margin: 0; }
+  .mock-title { font: 600 1.45rem/1.2 var(--display); margin: 2px 0 18px; }
+  .mock-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px 32px; margin-bottom: 18px; }
+  .mock-grid h4 { font: 600 .74rem/1 var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); margin: 6px 0 10px; grid-column: auto; }
+  dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 16px; margin: 0; font-size: .92rem; }
+  dt { color: var(--ink-faint); }
+  dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 2px; border-bottom: 1px solid var(--rule); margin-bottom: 0; }
+  .tabs span { padding: 8px 14px; font-size: .88rem; color: var(--ink-faint); border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tabs span.on { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
+  .mock table { font-size: .88rem; }
+  .mock .table-wrap { border-radius: 0 0 8px 8px; border-top: 0; margin-top: 0; }
+  .mock td:first-child { font-weight: 600; width: 32%; }
+  .caption { font-size: .85rem; color: var(--ink-faint); margin: 0 0 18px; }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 16px 0; }
+  .panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 16px 18px; }
+  .panel h3 { margin-top: 0; }
+  .panel ul { margin-bottom: 0; }
+
+  details { border: 1px solid var(--rule); border-radius: 10px; background: var(--surface); margin: 0 0 10px; max-width: 76ch; }
+  summary { cursor: pointer; padding: 12px 16px; font-weight: 600; list-style-position: inside; }
+  details > div { padding: 0 16px 12px; }
+  details p:last-child { margin-bottom: 0; }
+
+  pre {
+    background: var(--sunken); border-radius: 10px; padding: 14px 16px; overflow-x: auto;
+    font: .84rem/1.55 var(--mono); margin: 12px 0 18px;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+
+  footer { max-width: 1120px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--rule); font-size: .9rem; color: var(--ink-faint); }
+
+  @media (max-width: 860px) {
+    .shell { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    nav.toc { position: static; margin-bottom: 24px; }
+    nav.toc ol { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); border-left: 0; gap: 0 12px; }
+    nav.toc a { padding-left: 0; border-left: 0; }
+    .masthead { padding-block: 32px 28px; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="mark" aria-hidden="true">
+    <svg viewBox="0 0 48 48" fill="none">
+      <rect x="17" y="6" width="14" height="6" rx="3" stroke="#fff" stroke-width="3"/>
+      <rect x="8" y="11" width="32" height="5" rx="2.5" fill="#fff"/>
+      <path d="M11 19h26l-2.6 23H13.6L11 19z" fill="#fff"/>
+      <rect x="17" y="23" width="3" height="14" rx="1.5" fill="#4338CA"/>
+      <rect x="22.5" y="23" width="3" height="14" rx="1.5" fill="#4338CA"/>
+      <circle cx="36" cy="36" r="10" fill="#FBBF24" stroke="#4338CA" stroke-width="2.5"/>
+      <path d="M36 31v5l3.5 2" stroke="#312E81" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="masthead-text">
+    <p class="eyebrow">User guide · Odoo 18 · mrz_deletion_audit</p>
+    <h1>Deletion Audit Trail</h1>
+    <p class="lead">Find out who deleted a record, when, from where, and what it contained, including the lines and child records deleted with it.</p>
+    <div class="meta-row"><span>By Muhammad Ramzan</span><span>Support: <a href="mailto:techsramzan@gmail.com">techsramzan@gmail.com</a></span></div>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="toc" aria-label="Contents">
+    <p>Contents</p>
+    <ol>
+      <li><a href="#start">Getting started</a></li>
+      <li><a href="#access">Who can see what</a></li>
+      <li><a href="#read">Reading a deletion log</a></li>
+      <li><a href="#find">Finding a deleted record</a></li>
+      <li><a href="#analysis">Analysis</a></li>
+      <li><a href="#rules">Choosing what to track</a></li>
+      <li><a href="#settings">Settings &amp; retention</a></li>
+      <li><a href="#captured">What is captured</a></li>
+      <li><a href="#faq">Troubleshooting</a></li>
+      <li><a href="#dev">For developers</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <section id="start">
+      <h2>Getting started</h2>
+      <p>Standard Odoo keeps no trace of deleted records. Once this app is installed, every deletion of a tracked document is logged automatically: nobody has to do anything differently.</p>
+      <ol class="steps">
+        <li><strong>Install the app.</strong> Place the <code>mrz_deletion_audit</code> folder in your addons path, restart Odoo, then in <span class="path">Apps</span> click <em>Update Apps List</em> (debug mode), search <em>Deletion Audit</em> and click <em>Install</em>.</li>
+        <li><strong>Check what is tracked.</strong> On install, the app starts tracking the main business documents of the apps already installed: contacts, products, quotations and sales orders, purchase orders, invoices and bills, payments, transfers, manufacturing orders, CRM leads, projects and tasks, employees, expenses and helpdesk tickets. See them in <span class="path">Deletion Audit <i>›</i> Configuration <i>›</i> Tracking Rules</span>.</li>
+        <li><strong>Give access to your auditors.</strong> In <span class="path">Settings <i>›</i> Users</span>, open a user and set <em>Deletion Audit</em> to <em>Auditor</em> or <em>Administrator</em>.</li>
+        <li><strong>Review deletions.</strong> Open <span class="path">Deletion Audit <i>›</i> Deleted Records</span>. The newest deletions are at the top.</li>
+      </ol>
+      <p class="muted">This guide is always available in Odoo from <span class="path">Deletion Audit <i>›</i> User Guide</span>.</p>
+      <div class="note"><strong>Installed another app later?</strong> Its documents are not added to the tracking rules automatically. Add a rule for them, or enable <em>Track All Business Models</em> in the settings.</div>
+    </section>
+
+    <section id="access">
+      <h2>Who can see what</h2>
+      <p>The app adds two access levels under <em>Deletion Audit</em> on the user form. The default administrator gets <em>Administrator</em> on install.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Access level</th><th>Can do</th></tr></thead>
+          <tbody>
+            <tr><td>Auditor</td><td>Reads the deletion logs of the document types the user is allowed to read in Odoo. An auditor without access to Payroll, for example, never sees deleted payslips.</td></tr>
+            <tr><td>Administrator</td><td>Reads every deletion log, sees the <em>Technical</em> tab, and manages the tracking rules.</td></tr>
+            <tr><td>Settings access</td><td>Only Odoo administrators (<em>Settings</em> rights) can open the app's settings page.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tip"><strong>Logs cannot be altered.</strong> Nobody can edit or delete a log from the interface, not even an administrator. Logs only disappear through the retention policy you set.</div>
+      <p class="muted">In a multi-company database, a log belongs to the company of the deleted record, and users only see the logs of their companies.</p>
+    </section>
+
+    <section id="read">
+      <h2>Reading a deletion log</h2>
+      <p>Open any line of <span class="path">Deleted Records</span> to see the full log. Here is what a deleted invoice looks like (example data):</p>
+
+      <div class="mock" role="img" aria-label="Example of a deletion log for an invoice">
+        <div class="mock-bar">
+          <span>Deleted Records / Customer Invoice: INV/2026/00042</span>
+          <span class="mock-stats"><span class="stat"><b>2</b>Cascaded</span><span class="stat"><b>3</b>Same Transaction</span></span>
+        </div>
+        <div class="mock-body">
+          <p class="mock-label">Deleted Record</p>
+          <p class="mock-title">INV/2026/00042</p>
+          <div class="mock-grid">
+            <div>
+              <h4>Deleted Record</h4>
+              <dl>
+                <dt>Document Type</dt><dd>Journal Entry</dd>
+                <dt>Technical Model</dt><dd class="mono">account.move</dd>
+                <dt>Record ID</dt><dd class="mono">1187</dd>
+                <dt>Company</dt><dd>Your Company Ltd</dd>
+              </dl>
+            </div>
+            <div>
+              <h4>Deleted By</h4>
+              <dl>
+                <dt>Deleted By</dt><dd>Sara Ahmed</dd>
+                <dt>Deleted On</dt><dd class="mono">09/18/2026 14:32:07</dd>
+                <dt>Origin</dt><dd><span class="badge ui">User Interface</span></dd>
+                <dt>IP Address</dt><dd class="mono">192.168.1.24</dd>
+              </dl>
+            </div>
+          </div>
+          <div class="tabs"><span class="on">Deleted Data</span><span>Attachments</span><span>Cascaded Records</span><span>Technical</span></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Field</th><th>Value</th></tr></thead>
+              <tbody>
+                <tr><td>Customer</td><td>Azure Interior</td></tr>
+                <tr><td>Status</td><td>Draft</td></tr>
+                <tr><td>Invoice Date</td><td class="mono">09/15/2026</td></tr>
+                <tr><td>Total</td><td class="mono">1,250.00</td></tr>
+                <tr><td>Invoice lines</td><td>[DESK0004] Customizable Desk, [FURN_7800] Desk Combination</td></tr>
+                <tr><td>Created by</td><td>Bilal Khan</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <p class="caption">Example data. Field names depend on the document type.</p>
+
+      <h3>The two blocks at the top</h3>
+      <ul>
+        <li><strong>Deleted Record</strong>: the document type, its technical model and ID, and its company. For a cascaded record, <em>Deleted Together With</em> links to the parent's log and <em>Linked Through</em> names the field that connected them.</li>
+        <li><strong>Deleted By</strong>: the user, the exact time, where the deletion came from (see the table below) and the IP address. <em>Logged-in User</em> appears when an action ran as a different user from the person logged in.</li>
+      </ul>
+
+      <h3>The tabs</h3>
+      <ul>
+        <li><strong>Deleted Data</strong>: every field that held a value, with its label as shown in Odoo: names instead of IDs, labels instead of codes, formatted dates.</li>
+        <li><strong>Attachments</strong>: the files that were attached to the record (name, type, size).</li>
+        <li><strong>Cascaded Records</strong>: the child records deleted with it, such as invoice lines or order lines. Each one has its own log.</li>
+        <li><strong>Technical</strong> (administrators): browser, request path, transaction reference and the raw data in JSON.</li>
+      </ul>
+
+      <h3>The buttons</h3>
+      <ul>
+        <li><strong>Cascaded</strong>: opens the child records deleted with this one.</li>
+        <li><strong>Same Transaction</strong>: opens everything deleted in the same operation. Use it when a user deleted several documents at once, or when a deletion triggered others.</li>
+      </ul>
+
+      <h3>Where a deletion came from</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Origin</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge ui">User Interface</span></td><td>Deleted by a user in the Odoo web interface.</td></tr>
+            <tr><td><span class="badge warn">External API</span></td><td>Deleted by an external program through XML-RPC or JSON-RPC: an integration, a script, a connector.</td></tr>
+            <tr><td><span class="badge">Website / Portal</span></td><td>Deleted through a website or portal page.</td></tr>
+            <tr><td><span class="badge warn">Scheduled Action</span></td><td>Deleted by a scheduled action. <em>Origin Details</em> names it.</td></tr>
+            <tr><td><span class="badge">Cascade</span></td><td>Deleted automatically together with its parent record. <em>Origin Details</em> names the parent.</td></tr>
+            <tr><td><span class="badge">System / Script</span></td><td>Deleted from the Odoo shell or server code with no web request.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="find">
+      <h2>Finding a deleted record</h2>
+      <p>The list opens with the <em>Direct Deletions</em> filter, which shows the records someone actually deleted and hides the child records deleted with them. Remove the filter to see everything.</p>
+      <h3>Search by</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Search field</th><th>Finds</th></tr></thead>
+          <tbody>
+            <tr><td>Deleted Record</td><td>The record's name, e.g. <em>INV/2026/00042</em> or <em>Azure Interior</em>.</td></tr>
+            <tr><td>Deleted Data Contains</td><td>Any value the record held: an email, a phone number, a reference, an amount, a product name. Field labels are not searched, only values.</td></tr>
+            <tr><td>Document Type / Technical Model</td><td>All deletions of one kind of document.</td></tr>
+            <tr><td>Deleted By</td><td>All deletions by one user.</td></tr>
+            <tr><td>Record ID</td><td>A record you only know by its ID, e.g. from an error message or an old link.</td></tr>
+            <tr><td>IP Address</td><td>Everything deleted from one computer or server.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>Filters and grouping</h3>
+      <ul>
+        <li><strong>Filters</strong>: <em>Direct Deletions</em>, <em>Cascaded</em>, <em>Deleted by Me</em>, <em>User Interface</em>, <em>External API</em>, <em>Scheduled Actions</em>, and <em>Deletion Date</em> (this month, last quarter, a custom range…).</li>
+        <li><strong>Group by</strong>: <em>Document Type</em>, <em>Deleted By</em>, <em>Origin</em>, <em>Deletion Date</em> and <em>Company</em>.</li>
+      </ul>
+      <div class="tip"><strong>Example.</strong> "Who deleted the contact with the email <em>info@acme.com</em>?" Type <em>info@acme.com</em>, pick <em>Search Deleted Data Contains</em>, and the log shows the user, the date and everything the contact held.</div>
+    </section>
+
+    <section id="analysis">
+      <h2>Analysis</h2>
+      <p><span class="path">Deletion Audit <i>›</i> Analysis</span> opens a chart of deletions per day, split by user, with a pivot table of document types per month. It helps you spot unusual activity: one user deleting far more than usual, a sudden batch of deletions through the API, or a scheduled action removing more than expected.</p>
+      <p>Every search, filter and grouping from the list works here too. The same views are available from <span class="path">Deleted Records</span> through the view switcher.</p>
+    </section>
+
+    <section id="rules">
+      <h2>Choosing what to track</h2>
+      <p>Tracking rules live in <span class="path">Deletion Audit <i>›</i> Configuration <i>›</i> Tracking Rules</span> (Administrators). There is one rule per document type.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Option</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td>Model</td><td>The document type, e.g. <em>Sales Order</em>.</td></tr>
+            <tr><td>Mode: Track</td><td>Every deletion of this document type is logged.</td></tr>
+            <tr><td>Mode: Ignore</td><td>Deletions of this type are never logged, even with <em>Track All Business Models</em> on or when they are deleted along with a parent.</td></tr>
+            <tr><td>Capture Cascaded Records</td><td>Also log the child records deleted with it, such as order lines. On by default.</td></tr>
+            <tr><td>Excluded Fields</td><td>Fields never stored in the log. Use it for sensitive data such as a salary or a personal ID number.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The <em>Deletions</em> button on a rule opens that document type's logs. To pause tracking without losing the rule's settings, archive the rule.</p>
+    </section>
+
+    <section id="settings">
+      <h2>Settings &amp; retention</h2>
+      <p>Open <span class="path">Deletion Audit <i>›</i> Configuration <i>›</i> Settings</span>. Changing these requires Odoo administrator rights.</p>
+      <div class="grid-2">
+        <div class="panel">
+          <h3>Track All Business Models</h3>
+          <p>Logs the deletions of every document type, not only those with a rule. Technical data (system logs, messages and followers, sessions, access tokens, configuration parameters…) is skipped. Use <em>Ignore</em> rules to leave out other types.</p>
+        </div>
+        <div class="panel">
+          <h3>Cascaded Records</h3>
+          <p>The maximum number of child records captured for one deletion. The default is <strong>10,000</strong>. When a deletion goes over it, the log shows a warning that only part of the children was captured.</p>
+        </div>
+        <div class="panel">
+          <h3>Keep Logs For</h3>
+          <p>Logs older than this number of days are deleted automatically once a day by the scheduled action <em>Deletion Audit: Purge Old Logs</em>. <strong>0 keeps them forever</strong> (default). Set a limit if your data-protection rules require one.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="captured">
+      <h2>What is captured, and what is not</h2>
+      <div class="grid-2">
+        <div class="panel">
+          <h3>Captured</h3>
+          <ul>
+            <li>Every stored field that held a value</li>
+            <li>Names of linked records (customer, product, salesperson…)</li>
+            <li>Tags and lines: the first 50 names, and the count of the rest</li>
+            <li>Long texts up to 10,000 characters (longer ones end with …)</li>
+            <li>Images and files stored in fields: their size only</li>
+            <li>The list of attachments (name, type, size)</li>
+            <li>The record as it was <em>before</em> the deletion started</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Never stored</h3>
+          <ul>
+            <li>Fields whose technical name contains <code>password</code>, <code>secret</code>, <code>token</code> or <code>api_key</code></li>
+            <li>Fields excluded in a tracking rule</li>
+            <li>The content of attachment files</li>
+          </ul>
+        </div>
+      </div>
+      <h3>Not logged</h3>
+      <ul>
+        <li><strong>Deletions that fail.</strong> If Odoo refuses a deletion (e.g. a posted invoice), no log is kept.</li>
+        <li><strong>Records archived instead of deleted.</strong> Some documents, such as bank accounts, are archived when you click Delete. Nothing was deleted, so nothing is logged.</li>
+        <li><strong>Wizards and temporary data</strong>, and records removed while a module is being installed, upgraded or uninstalled.</li>
+        <li><strong>Deletions made directly in the database</strong> with SQL, bypassing Odoo.</li>
+      </ul>
+      <div class="note"><strong>Good to know.</strong> Some documents clean up their own children before being deleted: a transfer cancels its stock moves first. The transfer is logged as it was, but its moves are logged when they are deleted, so they appear as <em>Cancelled</em>.</div>
+    </section>
+
+    <section id="faq">
+      <h2>Troubleshooting</h2>
+      <details>
+        <summary>I deleted a record but there is no log</summary>
+        <div>
+          <p>Check that its document type has a <em>Track</em> rule, or that <em>Track All Business Models</em> is on and there is no <em>Ignore</em> rule for it. Also check the <em>Direct Deletions</em> filter: if the record was deleted along with a parent, it is listed under <em>Cascaded</em>. Finally, make sure the record was really deleted and not archived.</p>
+        </div>
+      </details>
+      <details>
+        <summary>I don't see the Deletion Audit menu</summary>
+        <div><p>Your user needs the <em>Auditor</em> or <em>Administrator</em> access level under <em>Deletion Audit</em> on the user form. Reload the page after the change.</p></div>
+      </details>
+      <details>
+        <summary>An auditor cannot find a log that I can see</summary>
+        <div><p>Auditors only see logs of the document types they can read in Odoo. Give them read access to that app, or the <em>Administrator</em> level.</p></div>
+      </details>
+      <details>
+        <summary>A log shows fewer child records than were deleted</summary>
+        <div><p>The deletion went over the <em>Cascaded Records</em> maximum and the log shows a warning. Raise the limit in the settings for future deletions.</p></div>
+      </details>
+      <details>
+        <summary>A log says “The data of this record could not be captured”</summary>
+        <div><p>Something went wrong while reading the record. The deletion itself still went through, and who, when and where are still logged. Contact support with the document type so it can be fixed.</p></div>
+      </details>
+    </section>
+
+    <section id="dev">
+      <h2>For developers</h2>
+      <p>The app records deletions from the standard <code>unlink()</code> method, so custom modules are covered without any change. To delete without logging, for example in a data-cleaning script, pass this context key:</p>
+<pre><code>records.with_context(mrz_deletion_audit_skip=True).unlink()</code></pre>
+      <p>Logs are stored in <code>mrz.deletion.audit.log</code> and rules in <code>mrz.deletion.audit.rule</code>. The snapshot is a JSON field keyed by field name:</p>
+<pre><code>{
+  "partner_id": {"label": "Customer", "type": "many2one", "value": 14,
+                 "display": "Azure Interior", "model": "res.partner"},
+  "state":      {"label": "Status", "type": "selection", "value": "draft", "display": "Draft"},
+  "amount_total": {"label": "Total", "type": "monetary", "value": 1250.0}
+}</code></pre>
+    </section>
+  </main>
+</div>
+
+<footer>Deletion Audit Trail (<code>mrz_deletion_audit</code>) for Odoo 18 · Muhammad Ramzan · <a href="mailto:techsramzan@gmail.com">techsramzan@gmail.com</a></footer>
+</body>
+</html>
