@@ -349,6 +349,7 @@
                 <dt>Deleted On</dt><dd class="mono">09/18/2026 14:32:07</dd>
                 <dt>Origin</dt><dd><span class="badge ui">User Interface</span></dd>
                 <dt>IP Address</dt><dd class="mono">192.168.1.24</dd>
+                <dt>Browser</dt><dd>Chrome 147 on Windows</dd>
               </dl>
             </div>
           </div>
@@ -373,7 +374,7 @@
       <h3>The two blocks at the top</h3>
       <ul>
         <li><strong>Deleted Record</strong>: the document type, its technical model and ID, and its company. For a cascaded record, <em>Deleted Together With</em> links to the parent's log and <em>Linked Through</em> names the field that connected them.</li>
-        <li><strong>Deleted By</strong>: the user, the exact time, where the deletion came from (see the table below) and the IP address. <em>Logged-in User</em> appears when an action ran as a different user from the person logged in.</li>
+        <li><strong>Deleted By</strong>: the user, the exact time, where the deletion came from (see the table below), the IP address and the browser. <em>Logged-in User</em> appears when an action ran as a different user from the person logged in.</li>
       </ul>
 
       <h3>The tabs</h3>
@@ -381,7 +382,7 @@
         <li><strong>Deleted Data</strong>: every field that held a value, with its label as shown in Odoo: names instead of IDs, labels instead of codes, formatted dates.</li>
         <li><strong>Attachments</strong>: the files that were attached to the record (name, type, size).</li>
         <li><strong>Cascaded Records</strong>: the child records deleted with it, such as invoice lines or order lines. Each one has its own log.</li>
-        <li><strong>Technical</strong> (administrators): browser, request path, transaction reference and the raw data in JSON.</li>
+        <li><strong>Technical</strong> (administrators): the user agent (the full identification sent by the browser), the request path, the transaction reference and the raw data in JSON.</li>
       </ul>
 
       <h3>The buttons</h3>
@@ -523,6 +524,10 @@
       <details>
         <summary>An auditor cannot find a log that I can see</summary>
         <div><p>Auditors only see logs of the document types they can read in Odoo. Give them read access to that app, or the <em>Administrator</em> level.</p></div>
+      </details>
+      <details>
+        <summary>Why does the User Agent mention Mozilla, Safari and Chrome at once?</summary>
+        <div><p>For historical reasons, every browser names other browsers in its identification so old websites don't block it. Chrome, for example, sends <em>Mozilla/5.0 … (KHTML, like Gecko) Chrome/147 Safari/537.36</em>. The <em>Browser</em> field shows the real one, e.g. <em>Chrome 147 on Linux</em>; the Technical tab keeps the original text.</p></div>
       </details>
       <details>
         <summary>A log shows fewer child records than were deleted</summary>

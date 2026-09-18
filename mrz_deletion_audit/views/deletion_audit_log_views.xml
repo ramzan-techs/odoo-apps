@@ -16,6 +16,7 @@
                 <field name="child_count" optional="show"/>
                 <field name="attachment_count" optional="hide"/>
                 <field name="ip_address" optional="hide"/>
+                <field name="client_name" optional="hide"/>
                 <field name="model_name" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
                 <field name="parent_id" column_invisible="1"/>
@@ -59,6 +60,7 @@
                             <field name="origin"/>
                             <field name="origin_detail" invisible="not origin_detail"/>
                             <field name="ip_address" invisible="not ip_address"/>
+                            <field name="client_name" invisible="not client_name"/>
                         </group>
                     </group>
                     <div class="alert alert-warning" role="alert" invisible="not cascade_truncated">

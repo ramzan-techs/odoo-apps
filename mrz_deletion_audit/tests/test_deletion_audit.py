@@ -7,6 +7,8 @@ from odoo.exceptions import AccessError, RedirectWarning
 from odoo.tests import TransactionCase, new_test_user, tagged
 from odoo.tools import mute_logger
 
+from odoo.addons.mrz_deletion_audit.models.deletion_audit_log import describe_user_agent
+
 
 @tagged('post_install', '-at_install')
 class TestDeletionAudit(TransactionCase):
@@ -61,6 +63,24 @@ class TestDeletionAudit(TransactionCase):
         self.assertTrue(snapshot['active']['value'])
         self.assertIn('deleted.partner@example.com', log.snapshot_html)
         self.assertIn('VIP Customer', log.snapshot_html)
+
+    def test_describe_user_agent(self):
+        cases = {
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) '
+            'Chrome/147.0.0.0 Safari/537.36': 'Chrome 147 on Linux',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+            'Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0': 'Edge 147 on Windows',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0) Gecko/20100101 Firefox/140.0':
+                'Firefox 140 on Windows',
+            'Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 '
+            '(KHTML, like Gecko) Version/17.4 Mobile/15E148 Safari/604.1': 'Safari 17 on iOS',
+            'Mozilla/5.0 (Linux; Android 14; K) AppleWebKit/537.36 (KHTML, like Gecko) '
+            'Chrome/147.0.0.0 Mobile Safari/537.36': 'Chrome 147 on Android',
+            'Python-xmlrpc/3.10': 'Python XML-RPC 3',
+            '': False,
+        }
+        for user_agent, expected in cases.items():
+            self.assertEqual(describe_user_agent(user_agent), expected, user_agent)
 
     def test_untracked_model_is_not_logged(self):
         tag = self.env['res.partner.category'].create({'name': 'Untracked'})

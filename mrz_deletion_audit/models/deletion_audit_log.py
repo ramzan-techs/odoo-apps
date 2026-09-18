@@ -2,6 +2,7 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0).
 import json
 import logging
+import re
 from contextlib import contextmanager
 from datetime import timedelta
 from weakref import WeakKeyDictionary
@@ -28,6 +29,47 @@ X2MANY_FIELD_TYPES = ('one2many', 'many2many')
 
 # cursor -> stack of {(model, id): log} of the deletions in progress
 _ACTIVE_PARENTS_BY_CURSOR = WeakKeyDictionary()
+
+# User agents name several browsers for compatibility ("Mozilla/5.0 ...
+# (KHTML, like Gecko) Chrome/147 Safari/537.36" is Chrome): the most specific
+# token must be tested first.
+CLIENT_PATTERNS = [
+    ('Python XML-RPC', r'Python-xmlrpc/(\d+)'),
+    ('Python Requests', r'python-requests/(\d+)'),
+    ('Python', r'Python-urllib/(\d+)'),
+    ('curl', r'curl/(\d+)'),
+    ('Postman', r'PostmanRuntime/(\d+)'),
+    ('Edge', r'Edg(?:e|A|iOS)?/(\d+)'),
+    ('Opera', r'(?:OPR|Opera)/(\d+)'),
+    ('Samsung Internet', r'SamsungBrowser/(\d+)'),
+    ('Firefox', r'(?:Firefox|FxiOS)/(\d+)'),
+    ('Chrome', r'(?:Chrome|CriOS)/(\d+)'),
+    ('Safari', r'Version/(\d+)[\d.]* .*Safari/'),
+]
+PLATFORM_PATTERNS = [
+    ('iOS', r'iPhone|iPad|iPod'),
+    ('Android', r'Android'),
+    ('ChromeOS', r'CrOS'),
+    ('Windows', r'Windows'),
+    ('macOS', r'Macintosh|Mac OS X'),
+    ('Linux', r'Linux|X11'),
+]
+
+
+def describe_user_agent(user_agent):
+    """Readable client name, e.g. 'Chrome 147 on Linux', from a User-Agent header."""
+    if not user_agent:
+        return False
+    client = next(
+        (f'{name} {match.group(1)}' for name, pattern in CLIENT_PATTERNS
+         if (match := re.search(pattern, user_agent))),
+        None,
+    )
+    platform = next((name for name, pattern in PLATFORM_PATTERNS if re.search(pattern, user_agent)), None)
+    if client and platform:
+        return f'{client} on {platform}'
+    return client or platform or user_agent[:64]
+
 
 ORIGINS = [
     ('ui', 'User Interface'),
@@ -61,7 +103,10 @@ class DeletionAuditLog(models.Model):
     origin = fields.Selection(ORIGINS, required=True, default='system', readonly=True)
     origin_detail = fields.Char(string='Origin Details', readonly=True)
     ip_address = fields.Char(string='IP Address', readonly=True)
-    user_agent = fields.Char(string='Browser / Client', readonly=True)
+    user_agent = fields.Char(string='User Agent', readonly=True,
+                             help="Identification sent by the browser or program, as received.")
+    client_name = fields.Char(string='Browser', compute='_compute_client_name', store=True,
+                              help="Browser or program used, read from the user agent.")
     request_path = fields.Char(string='Request Path', readonly=True)
     transaction_ref = fields.Char(
         string='Transaction', index=True, readonly=True,
@@ -93,6 +138,11 @@ class DeletionAuditLog(models.Model):
     def _compute_display_name(self):
         for log in self:
             log.display_name = f"{log.model_description}: {log.name}" if log.model_description else log.name
+
+    @api.depends('user_agent')
+    def _compute_client_name(self):
+        for log in self:
+            log.client_name = describe_user_agent(log.user_agent)
 
     def _compute_child_count(self):
         counts = dict(self._read_group([('parent_id', 'in', self.ids)], ['parent_id'], ['__count']))
