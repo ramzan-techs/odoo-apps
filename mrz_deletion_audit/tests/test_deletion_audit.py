@@ -145,15 +145,36 @@ class TestDeletionAudit(TransactionCase):
         self.assertTrue(self._get_log('res.partner', partner_id), "the fallback hook still logs")
         self.assertTrue(getattr(partner_class.unlink, 'mrz_deletion_audit', False), "the wrapper is restored")
 
-    def test_archive_instead_of_delete_is_not_logged(self):
-        # res.partner.bank overrides unlink() to archive the account
-        self._set_rule('res.partner.bank')
-        partner = self.env['res.partner'].create({'name': 'Bank Holder', 'is_company': True})
-        bank = self.env['res.partner.bank'].create({'acc_number': 'GB29NWBK60161331926819', 'partner_id': partner.id})
-        bank.unlink()
-        self.assertTrue(bank.exists())
-        self.assertFalse(bank.active)
-        self.assertFalse(self._get_log('res.partner.bank', bank.id))
+    def test_deletion_by_scheduled_action(self):
+        partner = self.env['res.partner'].create({'name': 'Deleted By Cron'})
+        cron = self.env['ir.cron'].create({
+            'name': 'MRZ Test Cleanup',
+            'model_id': self.env['ir.model']._get_id('res.partner'),
+            'state': 'code',
+            'code': f'model.browse({partner.id}).unlink()',
+            'interval_number': 1,
+            'interval_type': 'days',
+            'numbercall': -1,
+        })
+        cron._callback(cron.cron_name, cron.ir_actions_server_id.id, cron.id)
+        log = self._get_log('res.partner', partner.id)
+        self.assertEqual(log.origin, 'cron')
+        self.assertEqual(log.origin_detail, 'MRZ Test Cleanup')
+
+    def test_records_not_deleted_are_not_logged(self):
+        # e.g. a model overriding unlink() to archive instead of deleting:
+        # its logs are dropped once unlink() returns and the record still exists
+        tag = self.env['res.partner.category'].create({'name': 'Still Here'})
+        self._set_rule('res.partner.category')
+        logs = self.Log._capture(tag)
+        self.assertTrue(logs)
+        logs._discard_not_deleted()
+        self.assertFalse(logs.exists())
+        self.assertFalse(self._get_log('res.partner.category', tag.id))
+        # it is logged again if it is really deleted later on
+        tag_id = tag.id
+        tag.unlink()
+        self.assertTrue(self._get_log('res.partner.category', tag_id))
 
     def test_records_deleted_during_parent_deletion_are_linked(self):
         # simulate a parent unlink() deleting related records itself, like a

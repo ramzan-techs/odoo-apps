@@ -4,7 +4,7 @@
         <field name="name">mrz.deletion.audit.log.list</field>
         <field name="model">mrz.deletion.audit.log</field>
         <field name="arch" type="xml">
-            <list create="0" edit="0" delete="0" decoration-muted="parent_id">
+            <tree create="0" edit="0" delete="0" decoration-muted="parent_id">
                 <field name="deletion_date"/>
                 <field name="user_id" widget="many2one_avatar"/>
                 <field name="model_description"/>
@@ -20,7 +20,7 @@
                 <field name="model_name" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
                 <field name="parent_id" column_invisible="1"/>
-            </list>
+            </tree>
         </field>
     </record>
 
@@ -52,6 +52,8 @@
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="parent_id" invisible="not parent_id"/>
                             <field name="cascade_field" invisible="not cascade_field"/>
+                            <field name="cascade_truncated" invisible="1"/>
+                            <field name="attachment_count" invisible="1"/>
                         </group>
                         <group string="Deleted By">
                             <field name="user_id" widget="many2one_avatar"/>
@@ -76,13 +78,13 @@
                         </page>
                         <page string="Cascaded Records" name="cascaded_records" invisible="not child_count">
                             <field name="child_ids">
-                                <list>
+                                <tree>
                                     <field name="model_description"/>
                                     <field name="name"/>
                                     <field name="res_id"/>
                                     <field name="cascade_field"/>
                                     <field name="child_count"/>
-                                </list>
+                                </tree>
                             </field>
                         </page>
                         <page string="Technical" name="technical"
@@ -160,7 +162,7 @@
     <record id="action_mrz_deletion_audit_log" model="ir.actions.act_window">
         <field name="name">Deleted Records</field>
         <field name="res_model">mrz.deletion.audit.log</field>
-        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
         <field name="search_view_id" ref="mrz_deletion_audit_log_view_search"/>
         <field name="context">{'search_default_filter_direct': 1}</field>
         <field name="help" type="html">
@@ -173,7 +175,7 @@
     <record id="action_mrz_deletion_audit_log_analysis" model="ir.actions.act_window">
         <field name="name">Deletion Analysis</field>
         <field name="res_model">mrz.deletion.audit.log</field>
-        <field name="view_mode">graph,pivot,list,form</field>
+        <field name="view_mode">graph,pivot,tree,form</field>
         <field name="search_view_id" ref="mrz_deletion_audit_log_view_search"/>
         <field name="context">{'search_default_filter_direct': 1}</field>
     </record>

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-18 10:06+0000\n"
-"PO-Revision-Date: 2026-09-18 10:06+0000\n"
+"POT-Creation-Date: 2026-09-18 10:13+0000\n"
+"PO-Revision-Date: 2026-09-18 10:13+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,12 +18,14 @@ msgstr ""
 #. module: mrz_deletion_audit
 #. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+#, python-format
 msgid "(and %(count)s more)"
 msgstr ""
 
 #. module: mrz_deletion_audit
 #. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+#, python-format
 msgid "(binary data)"
 msgstr ""
 
@@ -84,8 +86,13 @@ msgid "Base"
 msgstr ""
 
 #. module: mrz_deletion_audit
-#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__user_agent
-msgid "Browser / Client"
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__client_name
+msgid "Browser"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,help:mrz_deletion_audit.field_mrz_deletion_audit_log__client_name
+msgid "Browser or program used, read from the user agent."
 msgstr ""
 
 #. module: mrz_deletion_audit
@@ -116,6 +123,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__child_ids
 #: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_form
 #: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.res_config_settings_view_form
+#, python-format
 msgid "Cascaded Records"
 msgstr ""
 
@@ -210,12 +218,14 @@ msgstr ""
 #. module: mrz_deletion_audit
 #. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+#, python-format
 msgid "Deleted data can only be searched with 'contains'."
 msgstr ""
 
 #. module: mrz_deletion_audit
 #. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+#, python-format
 msgid "Deleted in the Same Transaction"
 msgstr ""
 
@@ -303,6 +313,7 @@ msgstr ""
 #. module: mrz_deletion_audit
 #. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+#, python-format
 msgid "Field"
 msgstr ""
 
@@ -319,6 +330,7 @@ msgstr ""
 #. module: mrz_deletion_audit
 #. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+#, python-format
 msgid "File"
 msgstr ""
 
@@ -331,6 +343,11 @@ msgstr ""
 #. module: mrz_deletion_audit
 #: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__ip_address
 msgid "IP Address"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,help:mrz_deletion_audit.field_mrz_deletion_audit_log__user_agent
+msgid "Identification sent by the browser or program, as received."
 msgstr ""
 
 #. module: mrz_deletion_audit
@@ -429,12 +446,14 @@ msgstr ""
 #. module: mrz_deletion_audit
 #. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+#, python-format
 msgid "No"
 msgstr ""
 
 #. module: mrz_deletion_audit
 #. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+#, python-format
 msgid "No data captured."
 msgstr ""
 
@@ -496,6 +515,7 @@ msgid "Scheduled Action"
 msgstr ""
 
 #. module: mrz_deletion_audit
+#: model:ir.model,name:mrz_deletion_audit.model_ir_cron
 #: model_terms:ir.ui.view,arch_db:mrz_deletion_audit.mrz_deletion_audit_log_view_search
 msgid "Scheduled Actions"
 msgstr ""
@@ -509,6 +529,7 @@ msgstr ""
 #. module: mrz_deletion_audit
 #. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+#, python-format
 msgid "Size"
 msgstr ""
 
@@ -535,6 +556,7 @@ msgstr ""
 #. module: mrz_deletion_audit
 #. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+#, python-format
 msgid "The data of this record could not be captured."
 msgstr ""
 
@@ -592,7 +614,13 @@ msgstr ""
 #. module: mrz_deletion_audit
 #. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+#, python-format
 msgid "Type"
+msgstr ""
+
+#. module: mrz_deletion_audit
+#: model:ir.model.fields,field_description:mrz_deletion_audit.field_mrz_deletion_audit_log__user_agent
+msgid "User Agent"
 msgstr ""
 
 #. module: mrz_deletion_audit
@@ -610,6 +638,7 @@ msgstr ""
 #. module: mrz_deletion_audit
 #. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+#, python-format
 msgid "Value"
 msgstr ""
 
@@ -621,6 +650,7 @@ msgstr ""
 #. module: mrz_deletion_audit
 #. odoo-python
 #: code:addons/mrz_deletion_audit/models/deletion_audit_log.py:0
+#, python-format
 msgid "Yes"
 msgstr ""
 

@@ -4,14 +4,14 @@
         <field name="name">mrz.deletion.audit.rule.list</field>
         <field name="model">mrz.deletion.audit.rule</field>
         <field name="arch" type="xml">
-            <list>
+            <tree>
                 <field name="model_id"/>
                 <field name="model_name" optional="show"/>
                 <field name="mode" widget="badge"
                        decoration-success="mode == 'track'" decoration-muted="mode == 'ignore'"/>
                 <field name="capture_children" optional="show"/>
                 <field name="log_count" optional="show"/>
-            </list>
+            </tree>
         </field>
     </record>
 
@@ -41,11 +41,11 @@
                     <notebook invisible="mode != 'track'">
                         <page string="Excluded Fields" name="excluded_fields">
                             <field name="excluded_field_ids" options="{'no_create': True}">
-                                <list>
+                                <tree>
                                     <field name="field_description"/>
                                     <field name="name"/>
                                     <field name="ttype"/>
-                                </list>
+                                </tree>
                             </field>
                         </page>
                     </notebook>
@@ -72,7 +72,7 @@
     <record id="action_mrz_deletion_audit_rule" model="ir.actions.act_window">
         <field name="name">Tracking Rules</field>
         <field name="res_model">mrz.deletion.audit.rule</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Choose which models to audit</p>
             <p>Add a rule for each model whose deletions must be logged,

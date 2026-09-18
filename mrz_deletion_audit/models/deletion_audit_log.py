@@ -90,7 +90,7 @@ class DeletionAuditLog(models.Model):
     model_id = fields.Many2one('ir.model', string='Model', index=True, ondelete='set null', readonly=True)
     model_name = fields.Char(string='Technical Model', required=True, index=True, readonly=True)
     model_description = fields.Char(string='Document Type', readonly=True)
-    res_id = fields.Integer(string='Record ID', index=True, readonly=True, aggregator=None)
+    res_id = fields.Integer(string='Record ID', index=True, readonly=True, group_operator=False)
     company_id = fields.Many2one('res.company', string='Company', index=True, ondelete='set null', readonly=True)
     user_id = fields.Many2one('res.users', string='Deleted By', index=True, ondelete='set null', readonly=True)
     session_user_id = fields.Many2one(
@@ -181,7 +181,8 @@ class DeletionAuditLog(models.Model):
             """,
             SQL.identifier(self._table), f'%{escaped}%', f'%{escaped}%',
         )
-        return [('id', 'in', list({row[0] for row in self.env.execute_query(query)}))]
+        self.env.cr.execute(query)
+        return [('id', 'in', list({row[0] for row in self.env.cr.fetchall()}))]
 
     # ------------------------------------------------------------------
     # Capture
@@ -366,9 +367,9 @@ class DeletionAuditLog(models.Model):
             'user_id': self.env.uid,
             'deletion_date': fields.Datetime.now(),
             'origin': 'system',
-            'transaction_ref': str(self.env.execute_query(SQL("SELECT txid_current()"))[0][0]),
+            'transaction_ref': self._get_transaction_ref(),
         }
-        cron_id = self.env.context.get('cron_id')
+        cron_id = self.env.context.get('mrz_deletion_audit_cron_id')
         if cron_id:
             vals['origin'] = 'cron'
             vals['origin_detail'] = self.env['ir.cron'].sudo().browse(cron_id).exists().cron_name or False
@@ -387,6 +388,11 @@ class DeletionAuditLog(models.Model):
             if session_uid and session_uid != self.env.uid:
                 vals['session_user_id'] = session_uid
         return vals
+
+    @api.model
+    def _get_transaction_ref(self):
+        self.env.cr.execute(SQL("SELECT txid_current()"))
+        return str(self.env.cr.fetchone()[0])
 
     @api.model
     def _get_request_origin(self, path):
@@ -523,7 +529,7 @@ class DeletionAuditLog(models.Model):
 
     @api.model
     def _read_attachments(self, records):
-        rows = self.env.execute_query_dict(SQL(
+        self.env.cr.execute(SQL(
             """
             SELECT id, res_id, name, mimetype, file_size
               FROM ir_attachment
@@ -532,6 +538,7 @@ class DeletionAuditLog(models.Model):
             """,
             records._name, tuple(records.ids),
         ))
+        rows = self.env.cr.dictfetchall()
         attachments = {}
         for row in rows:
             attachments.setdefault(row.pop('res_id'), []).append(row)
@@ -636,7 +643,5 @@ class DeletionAuditLog(models.Model):
             ('deletion_date', '<', fields.Datetime.now() - timedelta(days=days)),
             ('parent_id', '=', False),
         ]
-        logs = self.sudo().search(domain, limit=PURGE_BATCH_SIZE)
-        remaining = self.sudo().search_count(domain) - len(logs)
-        logs.unlink()  # cascaded children are removed by the database
-        self.env['ir.cron']._notify_progress(done=len(logs), remaining=remaining)
+        while logs := self.sudo().search(domain, limit=PURGE_BATCH_SIZE):
+            logs.unlink()  # cascaded children are removed by the database
